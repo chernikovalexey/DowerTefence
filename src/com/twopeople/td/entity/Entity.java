@@ -63,12 +63,12 @@ public class Entity {
         //
         //
 
-        float speed = 0.5f;
+        float speed = 1f;
         float accelerationX = -velocity.x * friction + direction.x * speed;
         float accelerationZ = -velocity.z * friction + direction.y * speed;
 
-        velocity.x += accelerationX / delta * 0.025f;
-        velocity.z += accelerationZ / delta * 0.025f;
+        velocity.x = accelerationX / delta * 0.025f;
+        velocity.z = accelerationZ / delta * 0.025f;
 
         ArrayList<Entity> entities;
         x += velocity.x;

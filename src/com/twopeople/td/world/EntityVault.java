@@ -203,6 +203,10 @@ public class EntityVault {
         return entities;
     }
 
+    public boolean nothingColliding(Entity entity) {
+        return getCollidingEntities(entity).size() == 0;
+    }
+
     public int computeCellNum(int x, int y) {
         return x + y * xCells;
     }

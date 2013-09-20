@@ -14,13 +14,17 @@ import org.newdawn.slick.Graphics;
 public class World {
     private GameState gameState;
     private float worldWidth, worldHeight;
+
     private EntityVault entities;
+
+    private ConstructionManager constructionManager;
 
     public World(GameState game) {
         this.gameState = game;
         this.worldWidth = 1024;
         this.worldHeight = 768;
         this.entities = new EntityVault(worldWidth, worldHeight);
+        this.constructionManager = new ConstructionManager(this);
 
         entities.add(new Entity(10, 0, 10, 350, 350, 1));
         entities.add(new Entity(410, 0, 370, 10, 10, 2));
@@ -28,10 +32,12 @@ public class World {
 
     public void update(GameContainer gameContainer, int delta) {
         updateVault(gameContainer, delta, entities);
+        constructionManager.update(gameContainer, delta);
     }
 
     public void render(GameContainer gameContainer, Graphics g) {
         renderVault(gameContainer, gameState.getCamera(), g, entities);
+        constructionManager.render(gameContainer, g);
         renderGrid(g, entities);
     }
 
@@ -57,6 +63,12 @@ public class World {
                 int cell = ((int) (x / EntityVault.EntityVaultCell.WIDTH + y / EntityVault.EntityVaultCell.HEIGHT * vault.xCells));
                 g.drawString("items=" + vault.cells[cell].getEntities().size(), x + 15, y + 15);
             }
+        }
+    }
+
+    public void addEntity(Entity entity) {
+        if (entities.nothingColliding(entity)) {
+            entities.add(entity);
         }
     }
 }
