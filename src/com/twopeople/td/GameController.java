@@ -1,5 +1,6 @@
 package com.twopeople.td;
 
+import com.twopeople.td.state.GameState;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -16,6 +17,8 @@ public class GameController extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
+        addState(new GameState());
 
+        enterState(1);
     }
 }
