@@ -69,7 +69,7 @@ public class EntityVault {
             while (it.hasNext()) {
                 item = it.next();
                 if (item.getEntity().equals(entity)) {
-                    if (item.hasDuplicates() && !item.isDuplicate) {
+                    if (item.hasDuplicates()) {
                         for (Integer duplicate : item.getDuplicates()) {
                             getCell(duplicate).remove(entity);
                         }
@@ -110,7 +110,7 @@ public class EntityVault {
         }
 
         public boolean hasDuplicates() {
-            return duplicateCells.size() > 0;
+            return duplicateCells.size() > 0 && !this.isDuplicate;
         }
 
         public ArrayList<Integer> getDuplicates() {
@@ -178,6 +178,31 @@ public class EntityVault {
         return entities;
     }
 
+    public ArrayList<Entity> getCollidingEntities(Entity entity) {
+        Entity e;
+        ArrayList<Entity> entities = new ArrayList<Entity>();
+
+        for (EntityVaultItem item : getCellFor(entity).getEntities()) {
+
+            if (item.hasDuplicates()) {
+                for (Integer duplicate : item.getDuplicates()) {
+                    for (EntityVaultItem item2 : getCell(duplicate).getEntities()) {
+                        e = item2.getEntity();
+                        if (e.isCollidingWith(entity) && !e.equals(entity)) {
+                            entities.add(e);
+                        }
+                    }
+                }
+            }
+            e = item.getEntity();
+            if (e.isCollidingWith(entity) && !e.equals(entity)) {
+                entities.add(e);
+            }
+        }
+
+        return entities;
+    }
+
     public int computeCellNum(int x, int y) {
         return x + y * xCells;
     }
@@ -213,10 +238,16 @@ public class EntityVault {
     }
 
     public int getCellX(Entity entity) {
-        return (int) (entity.getX() / EntityVaultCell.WIDTH);
+        int cx = (int) (entity.getX() / EntityVaultCell.WIDTH);
+        if (cx < 0) { cx = 0; }
+        if (cx >= xCells) { cx = xCells - 1; }
+        return cx;
     }
 
     public int getCellY(Entity entity) {
-        return (int) (entity.getZ() / EntityVaultCell.HEIGHT);
+        int cy = (int) (entity.getZ() / EntityVaultCell.HEIGHT);
+        if (cy < 0) { cy = 0; }
+        if (cy >= yCells) { cy = yCells - 1; }
+        return cy;
     }
 }
