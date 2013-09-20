@@ -43,19 +43,19 @@ public class Entity {
 
         boolean moved = false;
         if (input.isKeyDown(type == 1 ? Input.KEY_A : Input.KEY_LEFT)) {
-            move(-1, 0);
+            direction.x = -1;
             moved = true;
         }
         if (input.isKeyDown(type == 1 ? Input.KEY_D : Input.KEY_RIGHT)) {
-            move(1, 0);
+            direction.x = 1;
             moved = true;
         }
         if (input.isKeyDown(type == 1 ? Input.KEY_W : Input.KEY_UP)) {
-            move(0, -1);
+            direction.y = -1;
             moved = true;
         }
         if (input.isKeyDown(type == 1 ? Input.KEY_S : Input.KEY_DOWN)) {
-            move(0, 1);
+            direction.y = 1;
             moved = true;
         }
 
@@ -63,12 +63,12 @@ public class Entity {
         //
         //
 
-        float speed = 1f;
+        float speed = 0.5f;
         float accelerationX = -velocity.x * friction + direction.x * speed;
         float accelerationZ = -velocity.z * friction + direction.y * speed;
 
-        velocity.x += accelerationX / delta * 0.1f;
-        velocity.z += accelerationZ / delta * 0.1f;
+        velocity.x += accelerationX / delta * 0.025f;
+        velocity.z += accelerationZ / delta * 0.025f;
 
         ArrayList<Entity> entities;
         x += velocity.x;
