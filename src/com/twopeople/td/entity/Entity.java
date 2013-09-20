@@ -28,12 +28,25 @@ public class Entity {
 
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
         Input input = gameContainer.getInput();
-        float speed = 1f;
-        if (input.isKeyDown(Input.KEY_A)) { x -= speed; }
-        if (input.isKeyDown(Input.KEY_D)) { x += speed; }
-        if (input.isKeyDown(Input.KEY_W)) { z -= speed; }
-        if (input.isKeyDown(Input.KEY_S)) { z += speed; }
-        vault.move(this);
+        float speed = 0.1f;
+        boolean moved = false;
+        if (input.isKeyDown(Input.KEY_A)) {
+            x -= speed;
+            moved = true;
+        }
+        if (input.isKeyDown(Input.KEY_D)) {
+            x += speed;
+            moved = true;
+        }
+        if (input.isKeyDown(Input.KEY_W)) {
+            z -= speed;
+            moved = true;
+        }
+        if (input.isKeyDown(Input.KEY_S)) {
+            z += speed;
+            moved = true;
+        }
+        if (moved) { vault.move(this); }
     }
 
     public void render(GameContainer gameContainer, Camera camera, Graphics g) {
@@ -50,11 +63,18 @@ public class Entity {
     }
 
     public boolean isCollidingWith(Entity entity) {
-        for (Shape shape1 : entity.getBBSkeleton()) {
-            for (Shape shape2 : this.getBBSkeleton()) {
-                if (shape1.intersects(shape2)) {
-                    return true;
-                }
+        for (Shape shape : entity.getBBSkeleton()) {
+            if (isCollidingWith(shape)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isCollidingWith(Shape shape) {
+        for (Shape shape1 : getBBSkeleton()) {
+            if (shape1.intersects(shape)) {
+                return true;
             }
         }
         return false;

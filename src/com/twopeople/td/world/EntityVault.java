@@ -1,8 +1,10 @@
 package com.twopeople.td.world;
 
 import com.twopeople.td.entity.Entity;
+import org.newdawn.slick.geom.Rectangle;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by Alexey
@@ -27,12 +29,56 @@ public class EntityVault {
             this.y = y;
         }
 
+        public int getX() {
+            return this.x;
+        }
+
+        public int getY() {
+            return this.y;
+        }
+
+        public int getCellNum() {
+            return computeCellNum(getX(), getY());
+        }
+
         public void add(Entity entity) {
-            entities.add(new EntityVaultItem(entity));
+            EntityVaultItem newItem = new EntityVaultItem(entity);
+            EntityVaultItem duplicateItem = new EntityVaultItem(entity);
+            entities.add(newItem);
+
+            if (isStickingOut(entity)) {
+                for (EntityVaultCell cell : getAllCellsFor(entity)) {
+                    if (!cell.equals(this)) {
+                        newItem.addDuplicate(cell.getCellNum());
+                        duplicateItem.isDuplicate = true;
+                        duplicateItem.setMasterCell(getCellNum());
+                        cell.add(duplicateItem);
+                    }
+                }
+            }
+        }
+
+        public void add(EntityVaultItem item) {
+            entities.add(item);
         }
 
         public boolean remove(Entity entity) {
-            return entities.remove(entity);
+            EntityVaultItem item;
+            Iterator<EntityVaultItem> it = entities.iterator();
+
+            while (it.hasNext()) {
+                item = it.next();
+                if (item.getEntity().equals(entity)) {
+                    if (item.hasDuplicates() && !item.isDuplicate) {
+                        for (Integer duplicate : item.getDuplicates()) {
+                            getCell(duplicate).remove(entity);
+                        }
+                    }
+                    it.remove();
+                }
+            }
+
+            return false;
         }
 
         public ArrayList<EntityVaultItem> getEntities() {
@@ -40,16 +86,19 @@ public class EntityVault {
         }
 
         public boolean isIntersecting(Entity entity) {
-            return entity.getX() >= x * WIDTH
-                    && entity.getZ() >= y * HEIGHT
-                    && entity.getX() + entity.getWidth() < x * (WIDTH + 1)
-                    && entity.getZ() + entity.getHeight() < y * (HEIGHT + 1);
+            return entity.isCollidingWith(new Rectangle(getX() * WIDTH, getY() * HEIGHT, WIDTH, HEIGHT));
+        }
+
+        public boolean isStickingOut(Entity entity) {
+            return entity.getX() + entity.getWidth() > this.x + WIDTH
+                    || entity.getZ() + entity.getHeight() > this.y + HEIGHT;
         }
     }
 
     private class EntityVaultItem {
         private Entity entity;
         public boolean isDuplicate = false;
+        private int masterCell = 0;
         private ArrayList<Integer> duplicateCells = new ArrayList<Integer>();
 
         public EntityVaultItem(Entity entity) {
@@ -58,6 +107,22 @@ public class EntityVault {
 
         public void addDuplicate(int cell) {
             duplicateCells.add(cell);
+        }
+
+        public boolean hasDuplicates() {
+            return duplicateCells.size() > 0;
+        }
+
+        public ArrayList<Integer> getDuplicates() {
+            return this.duplicateCells;
+        }
+
+        public void setMasterCell(int masterCell) {
+            this.masterCell = masterCell;
+        }
+
+        public int getMasterCell() {
+            return this.masterCell;
         }
 
         public Entity getEntity() {
@@ -80,11 +145,17 @@ public class EntityVault {
     }
 
     public void add(Entity entity) {
-        getCellFor(entity).add(entity);
+        int cx = getCellX(entity);
+        int cy = getCellY(entity);
+
+        entity.setCellX(cx);
+        entity.setCellY(cy);
+
+        getCell(cx, cy).add(entity);
     }
 
     public boolean remove(Entity entity) {
-        return getCellFor(entity).remove(entity);
+        return getCell(entity.getCellX(), entity.getCellY()).remove(entity);
     }
 
     public void move(Entity entity) {
@@ -107,10 +178,38 @@ public class EntityVault {
         return entities;
     }
 
+    public int computeCellNum(int x, int y) {
+        return x + y * xCells;
+    }
+
+    public EntityVaultCell getCell(int num) {
+        return cells[num];
+    }
+
+    public EntityVaultCell getCell(int x, int y) {
+        return getCell(computeCellNum(x, y));
+    }
+
     public EntityVaultCell getCellFor(Entity entity) {
         int cx = getCellX(entity);
         int cy = getCellY(entity);
-        return cells[cx + cy * xCells];
+        return cells[computeCellNum(cx, cy)];
+    }
+
+    public ArrayList<EntityVaultCell> getAllCellsFor(Entity entity) {
+        EntityVaultCell cell;
+        ArrayList<EntityVaultCell> intersectingCells = new ArrayList<EntityVaultCell>();
+
+        for (int x = 0; x < xCells; ++x) {
+            for (int y = 0; y < yCells; ++y) {
+                cell = getCell(x, y);
+                if (cell.isIntersecting(entity)) {
+                    intersectingCells.add(cell);
+                }
+            }
+        }
+
+        return intersectingCells;
     }
 
     public int getCellX(Entity entity) {

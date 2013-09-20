@@ -22,7 +22,8 @@ public class World {
         this.worldHeight = 768;
         this.entities = new EntityVault(worldWidth, worldHeight);
 
-        entities.add(new Entity(100, 0, 100, 60, 60));
+        entities.add(new Entity(10, 0, 10, 350, 350));
+        entities.add(new Entity(410, 0, 370, 10, 10));
     }
 
     public void update(GameContainer gameContainer, int delta) {
