@@ -254,4 +254,14 @@ public class EntityVault {
         if (cy >= yCells) { cy = yCells - 1; }
         return cy;
     }
+
+    public int size() {
+        int size = 0;
+        for (int x = 0; x < xCells; ++x) {
+            for (int y = 0; y < yCells; ++y) {
+                size += getCell(x, y).getEntities().size();
+            }
+        }
+        return size;
+    }
 }

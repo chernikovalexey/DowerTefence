@@ -1,10 +1,12 @@
 package com.twopeople.td.world;
 
 import com.twopeople.td.entity.Entity;
+import com.twopeople.td.entity.mob.Mob;
 import com.twopeople.td.state.GameState;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 
 /**
  * Created by Alexey
@@ -19,26 +21,50 @@ public class World {
 
     private ConstructionManager constructionManager;
 
+
     public World(GameState game) {
         this.gameState = game;
-        this.worldWidth = 1024;
-        this.worldHeight = 768;
+        this.worldWidth = 2048;
+        this.worldHeight = 2048;
         this.entities = new EntityVault(worldWidth, worldHeight);
         this.constructionManager = new ConstructionManager(this);
 
-        entities.add(new Entity(10, 0, 10, 350, 350, 1));
-        entities.add(new Entity(410, 0, 370, 10, 10, 2));
+        entities.add(new Mob(this, 10, 370, 50, 50));
     }
 
     public void update(GameContainer gameContainer, int delta) {
         updateVault(gameContainer, delta, entities);
         constructionManager.update(gameContainer, delta);
+
+        Input input = gameContainer.getInput();
+
+        Camera camera = gameState.getCamera();
+        if (input.isKeyDown(Input.KEY_LEFT)) {
+            camera.setTargetX(camera.getTargetX() - 1f);
+        }
+        if (input.isKeyDown(Input.KEY_RIGHT)) {
+            camera.setTargetX(camera.getTargetX() + 1f);
+        }
+        if (input.isKeyDown(Input.KEY_UP)) {
+            camera.setTargetY(camera.getTargetY() - 1f);
+        }
+        if (input.isKeyDown(Input.KEY_DOWN)) {
+            camera.setTargetY(camera.getTargetY() + 1f);
+        }
     }
 
     public void render(GameContainer gameContainer, Graphics g) {
-        renderVault(gameContainer, gameState.getCamera(), g, entities);
-        constructionManager.render(gameContainer, g);
-        renderGrid(g, entities);
+        Camera camera = gameState.getCamera();
+
+        g.setColor(new Color(204, 204, 204, 25));
+        g.fillRect(camera.getX(0), camera.getZ(0), worldWidth, worldHeight);
+        renderVault(gameContainer, camera, g, entities);
+        constructionManager.render(gameContainer, camera, g);
+        //renderGrid(camera, g, entities);
+        g.setColor(Color.white);
+        g.drawString("selected tower=" + getCM().getSelectedTower(), 10, 30);
+        g.drawString("camera pos=" + camera.getTargetX() + ", " + camera.getTargetY(), 10, 50);
+        g.drawString("entities=" + entities.size(), 10, 70);
     }
 
     private void updateVault(GameContainer gameContainer, int delta, EntityVault vault) {
@@ -53,15 +79,15 @@ public class World {
         }
     }
 
-    private void renderGrid(Graphics g, EntityVault vault) {
+    private void renderGrid(Camera camera, Graphics g, EntityVault vault) {
         g.setColor(Color.white);
 
         for (float x = 0; x < vault.xCells * EntityVault.EntityVaultCell.WIDTH; x += EntityVault.EntityVaultCell.WIDTH) {
             for (float y = 0; y < vault.yCells * EntityVault.EntityVaultCell.HEIGHT; y += EntityVault.EntityVaultCell.HEIGHT) {
-                g.drawLine(x, y, x + EntityVault.EntityVaultCell.WIDTH, y);
-                g.drawLine(x, y, x, y + EntityVault.EntityVaultCell.HEIGHT);
+                g.drawLine(camera.getX(x), camera.getZ(y), camera.getX(x + EntityVault.EntityVaultCell.WIDTH), camera.getZ(y));
+                g.drawLine(camera.getX(x), camera.getZ(y), camera.getX(x), camera.getZ(y + EntityVault.EntityVaultCell.HEIGHT));
                 int cell = ((int) (x / EntityVault.EntityVaultCell.WIDTH + y / EntityVault.EntityVaultCell.HEIGHT * vault.xCells));
-                g.drawString("items=" + vault.cells[cell].getEntities().size(), x + 15, y + 15);
+                g.drawString("items=" + vault.cells[cell].getEntities().size(), camera.getX(x + 15), camera.getZ(y + 15));
             }
         }
     }
@@ -70,5 +96,21 @@ public class World {
         if (entities.nothingColliding(entity)) {
             entities.add(entity);
         }
+    }
+
+    public float getWidth() {
+        return this.worldWidth;
+    }
+
+    public float getHeight() {
+        return this.worldHeight;
+    }
+
+    public GameState getState() {
+        return gameState;
+    }
+
+    public ConstructionManager getCM() {
+        return constructionManager;
     }
 }

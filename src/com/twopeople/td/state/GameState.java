@@ -1,5 +1,6 @@
 package com.twopeople.td.state;
 
+import com.twopeople.td.gui.TowerIcons;
 import com.twopeople.td.world.Camera;
 import com.twopeople.td.world.World;
 import org.newdawn.slick.GameContainer;
@@ -17,6 +18,8 @@ public class GameState extends BasicGameState {
     private Camera camera;
     private World world;
 
+    private TowerIcons towerIcons;
+
     @Override
     public int getID() {
         return 1;
@@ -26,6 +29,7 @@ public class GameState extends BasicGameState {
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         camera = new Camera(gameContainer.getWidth(), gameContainer.getHeight());
         world = new World(this);
+        towerIcons = new TowerIcons(world);
     }
 
     public Camera getCamera() {
@@ -36,10 +40,12 @@ public class GameState extends BasicGameState {
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
         camera.update(delta);
         world.update(gameContainer, delta);
+        towerIcons.update(gameContainer, delta);
     }
 
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         world.render(gameContainer, g);
+        towerIcons.render(gameContainer, g);
     }
 }

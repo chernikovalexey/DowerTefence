@@ -2,11 +2,11 @@ package com.twopeople.td.entity;
 
 import com.twopeople.td.world.Camera;
 import com.twopeople.td.world.EntityVault;
+import com.twopeople.td.world.World;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -19,50 +19,36 @@ import java.util.ArrayList;
  */
 
 public class Entity {
+    protected World world;
+
     private float x, y, z;
     private float width, height;
     private int cellX, cellY;
-    private int type = 1;
 
     private float friction = 1f;
     private Vector2f direction = new Vector2f(0f, 0f);
     private Vector3f velocity = new Vector3f(0f, 0f, 0f);
 
-    public Entity(float x, float y, float z, float width, float height, int type) {
+    public Entity(World world, float x, float y, float z, float width, float height) {
+        this.world = world;
         this.x = x;
         this.z = z;
         this.width = width;
         this.height = height;
-        this.type = type;
     }
 
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
         direction.set(0, 0);
+    }
 
-        Input input = gameContainer.getInput();
+    public void render(GameContainer gameContainer, Camera camera, Graphics g) {
+        g.setColor(Color.cyan);
+        g.fillRect(camera.getX(x), camera.getZ(z), width, height);
+        g.setColor(Color.white);
+        g.drawString(x + "," + z, camera.getX(x), camera.getZ(z));
+    }
 
-        boolean moved = false;
-        if (input.isKeyDown(type == 1 ? Input.KEY_A : Input.KEY_LEFT)) {
-            direction.x = -1;
-            moved = true;
-        }
-        if (input.isKeyDown(type == 1 ? Input.KEY_D : Input.KEY_RIGHT)) {
-            direction.x = 1;
-            moved = true;
-        }
-        if (input.isKeyDown(type == 1 ? Input.KEY_W : Input.KEY_UP)) {
-            direction.y = -1;
-            moved = true;
-        }
-        if (input.isKeyDown(type == 1 ? Input.KEY_S : Input.KEY_DOWN)) {
-            direction.y = 1;
-            moved = true;
-        }
-
-        //
-        //
-        //
-
+    public void moveInertly(int delta, EntityVault vault) {
         float speed = 1f;
         float accelerationX = -velocity.x * friction + direction.x * speed;
         float accelerationZ = -velocity.z * friction + direction.y * speed;
@@ -81,11 +67,6 @@ public class Entity {
         }
 
         vault.move(this);
-    }
-
-    public void render(GameContainer gameContainer, Camera camera, Graphics g) {
-        g.setColor(Color.cyan);
-        g.fillRect(camera.getX(x), camera.getZ(z), width, height);
     }
 
     public void move(float dx, float dz) {
@@ -122,8 +103,16 @@ public class Entity {
         return this.x;
     }
 
+    public void setX(float x) {
+        this.x = x;
+    }
+
     public float getZ() {
         return this.z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
     }
 
     public float getWidth() {
@@ -156,5 +145,13 @@ public class Entity {
 
     public void setCellY(int cellY) {
         this.cellY = cellY;
+    }
+
+    public void setDirectionX(float dx) {
+        direction.x = dx;
+    }
+
+    public void setDirectionY(float dy) {
+        direction.y = dy;
     }
 }

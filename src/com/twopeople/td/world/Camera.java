@@ -16,11 +16,19 @@ public class Camera {
         this.screenHeight = screenHeight;
     }
 
-    public void setX(float x) {
+    public float getTargetX() {
+        return this.targetX;
+    }
+
+    public void setTargetX(float x) {
         this.targetX = x;
     }
 
-    public void setY(float z) {
+    public float getTargetY() {
+        return this.targetY;
+    }
+
+    public void setTargetY(float z) {
         this.targetY = z;
     }
 
@@ -30,10 +38,18 @@ public class Camera {
     }
 
     public float getX(float x) {
-        return this.x + x;
+        return x - this.x;
     }
 
     public float getZ(float z) {
-        return this.y + z;
+        return z - this.y;
+    }
+
+    public float getScreenWidth() {
+        return this.screenWidth;
+    }
+
+    public float getScreenHeight() {
+        return this.screenHeight;
     }
 }
