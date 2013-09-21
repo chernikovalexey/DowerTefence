@@ -76,4 +76,8 @@ public class Tower extends Entity {
     public boolean isSelected() {
         return this.selected;
     }
+
+    public void setWorld(World world) {
+        this.world = world;
+    }
 }

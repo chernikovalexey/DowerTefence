@@ -44,8 +44,6 @@ public class Entity {
     public void render(GameContainer gameContainer, Camera camera, Graphics g) {
         g.setColor(Color.cyan);
         g.fillRect(camera.getX(x), camera.getZ(z), width, height);
-        g.setColor(Color.white);
-        g.drawString(x + "," + z, camera.getX(x), camera.getZ(z));
     }
 
     public void moveInertly(int delta, EntityVault vault) {
@@ -53,8 +51,8 @@ public class Entity {
         float accelerationX = -velocity.x * friction + direction.x * speed;
         float accelerationZ = -velocity.z * friction + direction.y * speed;
 
-        velocity.x = accelerationX / delta * 0.025f;
-        velocity.z = accelerationZ / delta * 0.025f;
+        velocity.x = accelerationX * delta * 0.025f;
+        velocity.z = accelerationZ * delta * 0.025f;
 
         ArrayList<Entity> entities;
         x += velocity.x;

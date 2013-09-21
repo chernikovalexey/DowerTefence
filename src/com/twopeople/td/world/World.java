@@ -1,5 +1,6 @@
 package com.twopeople.td.world;
 
+import com.twopeople.td.entity.Camp;
 import com.twopeople.td.entity.Entity;
 import com.twopeople.td.entity.mob.Mob;
 import com.twopeople.td.state.GameState;
@@ -29,7 +30,13 @@ public class World {
         this.entities = new EntityVault(worldWidth, worldHeight);
         this.constructionManager = new ConstructionManager(this);
 
-        entities.add(new Mob(this, 10, 370, 50, 50));
+        Mob mob = new Mob(this, 10, 370, 50, 50);
+        Camp camp = new Camp(this, 200, 200);
+        entities.add(mob);
+        entities.add(camp);
+
+        Pathfinder pathfinder = new Pathfinder(this);
+        pathfinder.trace(mob, camp);
     }
 
     public void update(GameContainer gameContainer, int delta) {

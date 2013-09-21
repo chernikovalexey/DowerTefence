@@ -9,8 +9,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 /**
@@ -69,36 +67,19 @@ public class ConstructionManager {
     }
 
     public void update(GameContainer gameContainer, int delta) {
+        Camera camera = world.getState().getCamera();
         Input input = gameContainer.getInput();
 
         for (ConstructionCell cell : cells) {
-            if (cell.isOver(world.getState().getCamera().getX(input.getMouseX()), world.getState().getCamera().getX(input.getMouseY()))) {
+            if (cell.isOver(input.getMouseX() + camera.getTargetX(), input.getMouseY() + camera.getTargetY())) {
                 overCellIndex = cell.getId();
+                break;
             }
         }
 
-        if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-            if (renderGrid) {
-                Tower newTower = towers.get(selectedTower);
-                String[] towerNameParts = newTower.getClass().getName().split(".");
-                System.out.println(towerNameParts[0]);
-                String towerName = newTower.getClass().getName();
-                Factory factory = new Factory();
-
-                try {
-                    System.out.println("get" + towerName);
-                    Method method = factory.getClass().getMethod("get" + towerName, null);
-                    newTower = (Tower) method.invoke(factory, world);
-                    newTower.setX(getOverCell().getX());
-                    newTower.setZ(getOverCell().getY());
-                    world.addEntity(newTower);
-                } catch (NoSuchMethodException e) {
-                } catch (IllegalArgumentException e) {
-                } catch (IllegalAccessException e) {
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) && renderGrid) {
+            Tower newTower = towers.get(selectedTower);
+            world.addEntity(Factory.create(newTower.getClass().getName(), world, getOverCell().getX(), getOverCell().getY()));
         }
     }
 
