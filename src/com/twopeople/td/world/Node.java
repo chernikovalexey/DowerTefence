@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 
 public class Node implements Comparable<Node> {
-    private float x, y;
-    private float width, height;
+    public float x, y;
+    public float width, height;
     private boolean visited = false;
     private float pathDistance = 0f;
     private float heuristicDistance = 0f;

@@ -39,21 +39,17 @@ public class Pathfinder {
             new Vector2f(0, 1), new Vector2f(0, -1)};
 
     public void addNeighbours(Node node) {
-        Vector2f pos = node.getPosition();
-
-        for (Vector2f p : dirs) {
-            Vector2f dir = p.copy();
-            dir.x *= 16;
-            dir.y *= 16;
-
-
-            Node n = getNode(p.add(dir));
-            if (isPassable(n)) {
-                node.addNeighbour(n);
+        int cellX = (int) (node.x / node.width);
+        int cellY = (int) (node.y / node.height);
+        System.out.println("Cell of a parent: " + cellX + ", " + cellY);
+        for (int x = Math.abs(cellX - 1); x <= cellY + 1; ++x) {
+            for (int y = cellY - 1; y <= cellY + 1; ++y) {
+                if (x != cellX && y != cellY) {
+                    node.addNeighbour(getNode(x, y));
+                }
             }
         }
     }
-
 
     public void trace(Entity from, Entity to) {
         nodes.clear();
@@ -64,14 +60,12 @@ public class Pathfinder {
 
         for (int x = 0; x < world.getWidth() / cellWidth; ++x) {
             for (int y = 0; y < world.getHeight() / cellHeight; ++y) {
-                nodes.add(createNode(x, y));
+                createNode(x, y);
             }
         }
 
-        Vector2f startPosition = new Vector2f(from.getX(), from.getZ());
-        Node start = createNode(startPosition);
-        Vector2f goalPosition = new Vector2f(to.getX(), to.getZ());
-        Node goal = createNode(goalPosition);
+        Node start = createNode((int) (from.getX() / cellWidth), (int) (from.getZ() / cellHeight));
+        Node goal = createNode((int) (to.getX() / cellWidth), (int) (to.getZ() / cellHeight));
 
         PriorityQueue<Node> queue = new PriorityQueue<Node>();
         queue.add(start);
@@ -85,7 +79,7 @@ public class Pathfinder {
 
             //            System.out.println("Current: " + current.getBounds().getX() + ", " + current.getBounds().getY() + "; " + current.getBounds().getWidth() + ", " + current.getBounds().getHeight());
 
-            if (current.isIntersecting(to)) {
+            if (current.isIntersecting(goal)) {
                 System.out.println("Seems to be found!");
                 break;
             }
@@ -93,6 +87,8 @@ public class Pathfinder {
             addNeighbours(current);
 
             current.visit();
+
+            System.out.println("Neighbours: " + current.getNeighbours().size());
 
             for (Node neighbour : current.getNeighbours()) {
                 if (neighbour.isVisited()) {
@@ -110,7 +106,7 @@ public class Pathfinder {
                 }
 
                 neighbour.setPathDistance(distance);
-                neighbour.setHeuristicDistance(neighbour.getPosition().distance(goalPosition) + distance);
+                neighbour.setHeuristicDistance(neighbour.getPosition().distance(goal.getPosition()) + distance);
                 neighbour.setPriority(neighbour.getHeuristicDistance());
                 if (neighbour.getParent() == null) {
                     neighbour.setParent(current);
