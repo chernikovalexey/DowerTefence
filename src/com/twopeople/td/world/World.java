@@ -30,7 +30,7 @@ public class World {
         this.entities = new EntityVault(worldWidth, worldHeight);
         this.constructionManager = new ConstructionManager(this);
 
-        Mob mob = new Mob(this, 10, 370, 50, 50);
+        Mob mob = new Mob(this, 10, 370, 48, 48);
         Camp camp = new Camp(this, 200, 200);
         entities.add(mob);
         entities.add(camp);

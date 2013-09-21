@@ -1,5 +1,8 @@
 package com.twopeople.td.world;
 
+import com.twopeople.td.entity.Entity;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.ArrayList;
@@ -9,8 +12,9 @@ import java.util.ArrayList;
  * At 10:40 PM on 9/21/13
  */
 
-public class Node {
+public class Node implements Comparable<Node> {
     private Vector2f pos;
+    private float width, height;
     private boolean visited = false;
     private float pathDistance = 0f;
     private float heuristicDistance = 0f;
@@ -19,8 +23,10 @@ public class Node {
     private Node parent = null;
     private ArrayList<Node> neighbours = new ArrayList<Node>();
 
-    public Node(Vector2f pos) {
-        this.pos = pos;
+    public Node(Vector2f pos, float width, float height) {
+        this.pos = pos.copy();
+        this.width = width;
+        this.height = height;
     }
 
     public boolean isVisited() {
@@ -75,7 +81,29 @@ public class Node {
         return this.neighbours;
     }
 
+    public int compare(Node n1, Node n2) {
+        if (n1.getPriority() == n2.getPriority()) { return 0; }
+        return n1.getPriority() < n2.getPriority() ? -1 : 1;
+    }
+
+    @Override
+    public int compareTo(Node o) {
+        return compare(this, o);
+    }
+
     public static String getHash(Vector2f pos) {
         return pos.x + "_" + pos.y;
+    }
+
+    public Shape getBounds() {
+        return new Rectangle(pos.x, pos.y, width, height);
+    }
+
+    public boolean isIntersecting(Node node) {
+        return node.getBounds().intersects(getBounds());
+    }
+
+    public boolean isIntersecting(Entity entity) {
+        return getBounds().intersects(entity.getBounds());
     }
 }
