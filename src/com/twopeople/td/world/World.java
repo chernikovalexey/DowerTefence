@@ -99,6 +99,10 @@ public class World {
         }
     }
 
+    public EntityVault getEntities() {
+        return this.entities;
+    }
+
     public void addEntity(Entity entity) {
         if (entities.nothingColliding(entity)) {
             entities.add(entity);

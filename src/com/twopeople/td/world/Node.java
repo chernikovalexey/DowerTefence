@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 
 public class Node implements Comparable<Node> {
-    private Vector2f pos;
+    private float x, y;
     private float width, height;
     private boolean visited = false;
     private float pathDistance = 0f;
@@ -23,8 +23,9 @@ public class Node implements Comparable<Node> {
     private Node parent = null;
     private ArrayList<Node> neighbours = new ArrayList<Node>();
 
-    public Node(Vector2f pos, float width, float height) {
-        this.pos = pos.copy();
+    public Node(float x, float y, float width, float height) {
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
     }
@@ -38,7 +39,7 @@ public class Node implements Comparable<Node> {
     }
 
     public Vector2f getPosition() {
-        return this.pos;
+        return new Vector2f(x, y);
     }
 
     public float getPathDistance() {
@@ -91,12 +92,12 @@ public class Node implements Comparable<Node> {
         return compare(this, o);
     }
 
-    public static String getHash(Vector2f pos) {
-        return pos.x + "_" + pos.y;
+    public static String getHash(int cx, int cy) {
+        return cx + "_" + cy;
     }
 
     public Shape getBounds() {
-        return new Rectangle(pos.x, pos.y, width, height);
+        return new Rectangle(x, y, width, height);
     }
 
     public boolean isIntersecting(Node node) {

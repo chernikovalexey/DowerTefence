@@ -2,6 +2,7 @@ package com.twopeople.td.world;
 
 import com.twopeople.td.entity.Entity;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -201,6 +202,11 @@ public class EntityVault {
         }
 
         return entities;
+    }
+
+    public boolean isCollidingShape(Shape shape) {
+        Entity entity = new Entity(null, shape.getX(), 0, shape.getY(), shape.getWidth(), shape.getHeight());
+        return !nothingColliding(entity);
     }
 
     public boolean nothingColliding(Entity entity) {

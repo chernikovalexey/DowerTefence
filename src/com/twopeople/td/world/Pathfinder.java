@@ -21,30 +21,39 @@ public class Pathfinder {
         this.world = world;
     }
 
-    public Node createNode(Vector2f pos) {
-        Node node = new Node(pos, cellWidth, cellHeight);
-        nodes.put(Node.getHash(pos), node);
+    public Node createNode(int cx, int cy) {
+        Node node = new Node(cx * cellWidth, cy * cellHeight, cellWidth, cellHeight);
+        nodes.put(Node.getHash(cx, cy), node);
         return node;
     }
 
-    public Node getNode(Vector2f pos) {
-        String hash = Node.getHash(pos);
-        Node node = nodes.get(hash);
-        return node == null ? createNode(pos) : node;
+    public Node getNode(int cx, int cy) {
+        return nodes.get(Node.getHash(cx, cy));
     }
 
-    public void addNeighbours(Node node) {
-        Vector2f dir;
+    public boolean isPassable(Node node) {
+        return !world.getEntities().isCollidingShape(node.getBounds());
+    }
 
-        for (int x = -1; x <= 1; ++x) {
-            for (int y = -1; y <= 1; ++y) {
-                if (x != 0 && y != 0) {
-                    dir = new Vector2f(x * cellWidth, y * cellHeight);
-                    node.addNeighbour(getNode(node.getPosition().add(dir)));
-                }
+    private static final Vector2f[] dirs = {new Vector2f(-1, 0), new Vector2f(1, 0),
+            new Vector2f(0, 1), new Vector2f(0, -1)};
+
+    public void addNeighbours(Node node) {
+        Vector2f pos = node.getPosition();
+
+        for (Vector2f p : dirs) {
+            Vector2f dir = p.copy();
+            dir.x *= 16;
+            dir.y *= 16;
+
+
+            Node n = getNode(p.add(dir));
+            if (isPassable(n)) {
+                node.addNeighbour(n);
             }
         }
     }
+
 
     public void trace(Entity from, Entity to) {
         nodes.clear();
@@ -52,6 +61,13 @@ public class Pathfinder {
         Node current;
         this.cellWidth = from.getWidth();
         this.cellHeight = from.getHeight();
+
+        for (int x = 0; x < world.getWidth() / cellWidth; ++x) {
+            for (int y = 0; y < world.getHeight() / cellHeight; ++y) {
+                nodes.add(createNode(x, y));
+            }
+        }
+
         Vector2f startPosition = new Vector2f(from.getX(), from.getZ());
         Node start = createNode(startPosition);
         Vector2f goalPosition = new Vector2f(to.getX(), to.getZ());
@@ -67,7 +83,7 @@ public class Pathfinder {
                 continue;
             }
 
-            System.out.println("Current: " + current.getBounds().getX() + ", " + current.getBounds().getY() + "; " + current.getBounds().getWidth() + ", " + current.getBounds().getHeight());
+            //            System.out.println("Current: " + current.getBounds().getX() + ", " + current.getBounds().getY() + "; " + current.getBounds().getWidth() + ", " + current.getBounds().getHeight());
 
             if (current.isIntersecting(to)) {
                 System.out.println("Seems to be found!");
@@ -83,7 +99,7 @@ public class Pathfinder {
                     continue;
                 }
 
-                System.out.println("  Neighbour: " + neighbour.getBounds().getX() + ", " + neighbour.getBounds().getY() + "; " + neighbour.getBounds().getWidth() + ", " + neighbour.getBounds().getHeight());
+                //                System.out.println("  Neighbour: " + neighbour.getBounds().getX() + ", " + neighbour.getBounds().getY() + "; " + neighbour.getBounds().getWidth() + ", " + neighbour.getBounds().getHeight());
 
                 float distance = current.getPathDistance() + current.getPosition().distance(neighbour.getPosition());
 
