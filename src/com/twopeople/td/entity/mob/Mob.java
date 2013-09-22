@@ -2,9 +2,12 @@ package com.twopeople.td.entity.mob;
 
 import com.twopeople.td.entity.Entity;
 import com.twopeople.td.world.EntityVault;
+import com.twopeople.td.world.Path;
 import com.twopeople.td.world.World;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Input;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Vector2f;
 
 /**
  * Created by Alexey
@@ -16,6 +19,9 @@ public class Mob extends Entity {
     private int health, reward, unitId;
     private boolean isShooting, isFlying;
 
+    private Entity goal;
+    private Path path;
+
     public Mob(World world, float x, float z, float width, float height, int id) {
         super(world, x, 0, z, width, height, id);
     }
@@ -24,22 +30,22 @@ public class Mob extends Entity {
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
         super.update(gameContainer, delta, vault);
 
-        Input input = gameContainer.getInput();
-
-        if (input.isKeyDown(Input.KEY_A)) {
-            setDirectionX(-1);
-        }
-        if (input.isKeyDown(Input.KEY_D)) {
-            setDirectionX(1);
-        }
-        if (input.isKeyDown(Input.KEY_W)) {
-            setDirectionY(-1);
-        }
-        if (input.isKeyDown(Input.KEY_S)) {
-            setDirectionY(1);
+        if (goal != null) {
+            Vector2f goalPosition = path.getCurrentGoalPosition(this);
+            move(goalPosition.x - getWidth() / 2, goalPosition.y - getHeight() / 2);
         }
 
         super.moveInertly(delta, vault);
+    }
+
+    @Override
+    public Shape getBounds() {
+        return new Rectangle(getX() + 1, getZ() + 1, getWidth() - 2, getHeight() - 2);
+    }
+
+    public void setGoal(Entity goal) {
+        this.goal = goal;
+        this.path = world.getPathfinder().trace(this, goal);
     }
 
     public float getSpeed() {

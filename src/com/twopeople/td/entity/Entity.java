@@ -70,7 +70,7 @@ public class Entity {
     }
 
     public void move(float dx, float dz) {
-        direction = (new Vector2f(dx, dz)).normalise();
+        direction = (new Vector2f(dx - x, dz - z)).normalise();
     }
 
     public Shape getBounds() {

@@ -1,7 +1,10 @@
 package com.twopeople.td.world;
 
+import com.twopeople.td.entity.Entity;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.ArrayList;
 
@@ -11,10 +14,36 @@ import java.util.ArrayList;
  */
 
 public class Path {
+    private int index = 0;
     private ArrayList<Node> nodes = new ArrayList<Node>();
 
     public void addNodeFront(Node node) {
         nodes.add(0, node);
+    }
+
+    public Vector2f getCurrentGoalPosition(Entity entity) {
+        Node node = nodes.get(index);
+        float cx = node.getBounds().getCenterX();
+        float cy = node.getBounds().getCenterY();
+
+        if (entity.isCollidingWith(new Rectangle(cx, cy, 1, 1))) {
+            next();
+        }
+
+        return new Vector2f(cx, cy);
+    }
+
+    public void previous() {
+        if (index > 0) {
+            --index;
+        }
+    }
+
+    public void next() {
+        ++index;
+        if (index >= nodes.size()) {
+            previous();
+        }
     }
 
     public void render(Camera camera, Graphics g) {

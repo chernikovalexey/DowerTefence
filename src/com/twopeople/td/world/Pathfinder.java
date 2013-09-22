@@ -3,6 +3,7 @@ package com.twopeople.td.world;
 import com.twopeople.td.entity.Entity;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,39 +19,40 @@ public class Pathfinder {
     private World world;
     private float cellWidth, cellHeight;
 
-    private Node goal;
+    private static final Vector2f[] dirs = new Vector2f[]{
+            new Vector2f(1, 0), new Vector2f(-1, 0), new Vector2f(0, 1), new Vector2f(0, -1)
+    };
 
+    private Node goal;
     private HashMap<String, Node> nodes = new HashMap<String, Node>();
 
     public Pathfinder(World world) {
         this.world = world;
     }
 
-    public Node createNode(int cx, int cy) {
+    private Node createNode(int cx, int cy) {
         Node node = new Node(cx * cellWidth, cy * cellHeight, cellWidth, cellHeight);
         nodes.put(Node.getHash(cx, cy), node);
         return node;
     }
 
-    public Node getNode(int cx, int cy) {
+    private Node getNode(int cx, int cy) {
         return nodes.get(Node.getHash(cx, cy));
     }
 
-    public boolean isPassable(Node node) {
+    private boolean isPassable(Node node) {
         return !world.getEntities().isCollidingShape(node.getBounds());
     }
 
-    public void addNeighbours(Node node) {
+    private void addNeighbours(Node node) {
         Node n;
         int cellX = (int) (node.x / node.width);
         int cellY = (int) (node.y / node.height);
 
-        for (int x = cellX - 1 < 0 ? 0 : cellX - 1; x <= (cellX + 1 > world.getWidth() / cellWidth ? cellX : cellX + 1); ++x) {
-            for (int y = cellY - 1 < 0 ? 0 : cellY - 1; y <= (cellY + 1 > world.getHeight() / cellHeight ? cellY : cellY + 1); ++y) {
-                n = getNode(x, y);
-                if (x != cellX || y != cellY) {
-                    node.addNeighbour(n);
-                }
+        for (Vector2f d : dirs) {
+            n = getNode((int) (cellX + d.x), (int) (cellY + d.y));
+            if (n != null) {
+                node.addNeighbour(n);
             }
         }
     }

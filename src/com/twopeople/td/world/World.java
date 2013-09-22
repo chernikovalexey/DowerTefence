@@ -44,6 +44,8 @@ public class World {
         entities.add(camp);
         entities.add(wall);
 
+        mob.setGoal(camp);
+
         path = pathfinder.trace(mob, camp);
         getState().getCamera().setTargetX(200);
     }
@@ -135,6 +137,10 @@ public class World {
 
     public ConstructionManager getCM() {
         return constructionManager;
+    }
+
+    public Pathfinder getPathfinder() {
+        return pathfinder;
     }
 
     public void addSpawner(WaveSpawner spawner) {
