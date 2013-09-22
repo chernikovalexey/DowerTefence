@@ -92,7 +92,7 @@ public class World {
             e = i.next();
             e.update(gameContainer, delta, vault);
             if (e.shouldRemove()) {
-                i.remove();
+                vault.remove(e);
             }
         }
     }
@@ -117,6 +117,10 @@ public class World {
                 g.drawString("items=" + vault.getCell(cell).getEntities().size(), camera.getX(x + 15), camera.getZ(y + 15));
             }
         }
+    }
+
+    public boolean isOutside(Entity entity) {
+        return entity.getX() < 0 || entity.getZ() < 0 || entity.getX() > worldWidth || entity.getZ() > worldHeight;
     }
 
     public EntityVault getEntities() {

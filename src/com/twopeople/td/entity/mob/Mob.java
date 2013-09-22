@@ -7,6 +7,7 @@ import com.twopeople.td.world.Camera;
 import com.twopeople.td.world.EntityVault;
 import com.twopeople.td.world.Path;
 import com.twopeople.td.world.World;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
@@ -30,6 +31,7 @@ public class Mob extends BattleEntity {
         super(world, x, 0, z, width, height);
 
         setId(id);
+        setHealth(1000);
 
         setAnimation(Art.mob);
         setSpeed(1f);
@@ -50,6 +52,7 @@ public class Mob extends BattleEntity {
     @Override
     public void render(GameContainer gameContainer, Camera camera, Graphics g) {
         super.render(gameContainer, camera, g);
+        g.setColor(Color.white);
         g.drawString("" + getHealth(), camera.getX(getX()), camera.getZ(getZ()));
     }
 
@@ -70,7 +73,7 @@ public class Mob extends BattleEntity {
 
     @Override
     public void onHit(Entity entity) {
-        System.out.println("Hit!");
+        //System.out.println("Hit!");
     }
 
     public void setGoal(Entity goal) {

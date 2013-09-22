@@ -224,19 +224,16 @@ public class EntityVault {
                         e = item2.getEntity();
                         if (e.isCollidingWith(entity) && !e.equals(entity) && isIntersectionPredicate(e, entity, it)) {
                             entities.add(e);
-                            e.onHit(entity);
                         }
                     }
                 }
             }
             e = item.getEntity();
-            System.out.println(it + ", " + isIntersectionPredicate(e, entity, it));
             if (e.isCollidingWith(entity) && !e.equals(entity) && isIntersectionPredicate(e, entity, it)) {
                 entities.add(e);
                 e.onHit(entity);
             }
         }
-
         return entities;
     }
 

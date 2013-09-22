@@ -130,13 +130,23 @@ public class Entity {
         velocity.z = accelerationZ * delta;
 
         ArrayList<Entity> entities;
+
         x += velocity.x;
-        if (vault.getCollidingEntities(this, intersectionType).size() > 0) {
-            x -= velocity.x;
+        if (intersectionType != IType.None) {
+            entities = vault.getCollidingEntities(this, intersectionType);
+            if (entities.size() > 0) {
+                x -= velocity.x;
+                onCollide(entities);
+            }
         }
+
         z += velocity.z;
-        if (vault.getCollidingEntities(this, intersectionType).size() > 0) {
-            z -= velocity.z;
+        if (intersectionType != IType.None) {
+            entities = vault.getCollidingEntities(this, intersectionType);
+            if (entities.size() > 0) {
+                z -= velocity.z;
+                onCollide(entities);
+            }
         }
 
         vault.move(this);
@@ -225,7 +235,7 @@ public class Entity {
         }
     }
 
-    public void remove() {
+    protected void remove() {
         this.isToRemove = true;
     }
 

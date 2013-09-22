@@ -8,6 +8,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
+import java.util.ArrayList;
+
 /**
  * Created by Alexey
  * At 6:11 AM on 9/22/13
@@ -32,8 +34,20 @@ public class Bullet extends Entity {
     }
 
     @Override
+    public void onCollide(ArrayList<Entity> entities) {
+        for (Entity e : entities) {
+            e.hurt(10);
+        }
+        remove();
+    }
+
+    @Override
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
         super.moveInertly(delta, vault);
+
+        if (world.isOutside(this)) {
+            remove();
+        }
     }
 
     @Override
