@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<map>
+  <entities>
+    <entity x="0" y="0" type="2" id="4" area="40">
+      <wave time="5" pylon="43">
+        <unit unitId="1" count="10" />
+      </wave>
+    </entity>
+    <entity x="19" y="10" type="5" id="43" />
+    <entity x="1" y="0" type="1" id="46" />
+    <entity x="2" y="0" type="1" id="50" />
+    <entity x="3" y="0" type="1" id="55" />
+    <entity x="4" y="0" type="1" id="59" />
+    <entity x="5" y="0" type="1" id="63" />
+    <entity x="6" y="0" type="1" id="68" />
+    <entity x="7" y="0" type="1" id="76" />
+    <entity x="8" y="0" type="1" id="81" />
+    <entity x="9" y="0" type="1" id="88" />
+    <entity x="10" y="0" type="1" id="93" />
+    <entity x="11" y="0" type="1" id="101" />
+    <entity x="12" y="0" type="1" id="105" />
+    <entity x="13" y="0" type="1" id="110" />
+    <entity x="14" y="0" type="1" id="116" />
+    <entity x="15" y="0" type="1" id="121" />
+    <entity x="16" y="0" type="1" id="125" />
+    <entity x="17" y="0" type="1" id="130" />
+    <entity x="18" y="0" type="1" id="141" />
+    <entity x="19" y="0" type="1" id="155" />
+    <entity x="19" y="1" type="1" id="163" />
+    <entity x="19" y="2" type="1" id="167" />
+    <entity x="2" y="3" type="1" id="384" />
+    <entity x="2" y="2" type="1" id="254" />
+    <entity x="19" y="3" type="1" id="192" />
+    <entity x="19" y="4" type="1" id="204" />
+    <entity x="19" y="5" type="1" id="212" />
+    <entity x="19" y="6" type="1" id="218" />
+    <entity x="19" y="7" type="1" id="230" />
+    <entity x="19" y="8" type="1" id="246" />
+    <entity x="19" y="9" type="1" id="252" />
+    <entity x="2" y="4" type="1" id="267" />
+    <entity x="2" y="5" type="1" id="278" />
+    <entity x="2" y="6" type="1" id="290" />
+    <entity x="2" y="7" type="1" id="306" />
+    <entity x="2" y="8" type="1" id="314" />
+    <entity x="2" y="9" type="1" id="523" />
+    <entity x="11" y="9" type="1" id="321" />
+    <entity x="11" y="8" type="1" id="326" />
+    <entity x="11" y="7" type="1" id="333" />
+    <entity x="11" y="6" type="1" id="472" />
+    <entity x="11" y="5" type="1" id="343" />
+    <entity x="11" y="4" type="1" id="349" />
+    <entity x="11" y="3" type="1" id="355" />
+    <entity x="11" y="2" type="1" id="373" />
+    <entity x="11" y="1" type="1" id="380" />
+    <entity x="2" y="10" type="1" id="381" />
+    <entity x="3" y="3" type="1" id="392" />
+    <entity x="4" y="3" type="1" id="404" />
+    <entity x="5" y="3" type="1" id="413" />
+    <entity x="6" y="3" type="1" id="426" />
+    <entity x="7" y="3" type="1" id="441" />
+    <entity x="8" y="3" type="1" id="466" />
+    <entity x="9" y="3" type="1" id="470" />
+    <entity x="10" y="6" type="1" id="480" />
+    <entity x="9" y="6" type="1" id="487" />
+    <entity x="8" y="6" type="1" id="492" />
+    <entity x="7" y="6" type="1" id="494" />
+    <entity x="6" y="6" type="1" id="497" />
+    <entity x="5" y="6" type="1" id="506" />
+    <entity x="4" y="9" type="1" id="539" />
+    <entity x="3" y="9" type="1" id="530" />
+    <entity x="4" y="6" type="1" id="518" />
+    <entity x="5" y="9" type="1" id="542" />
+    <entity x="6" y="9" type="1" id="547" />
+    <entity x="7" y="9" type="1" id="552" />
+    <entity x="8" y="9" type="1" id="555" />
+    <entity x="9" y="9" type="1" id="574" />
+  </entities>
+  <areas>
+    <entity x="0" y="0" type="4" id="40" width="20" height="11" />
+  </areas>
+</map>
