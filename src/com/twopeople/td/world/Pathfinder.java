@@ -1,9 +1,12 @@
 package com.twopeople.td.world;
 
 import com.twopeople.td.entity.Entity;
-import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 /**
@@ -35,23 +38,30 @@ public class Pathfinder {
         return !world.getEntities().isCollidingShape(node.getBounds());
     }
 
-    private static final Vector2f[] dirs = {new Vector2f(-1, 0), new Vector2f(1, 0),
-            new Vector2f(0, 1), new Vector2f(0, -1)};
-
     public void addNeighbours(Node node) {
         int cellX = (int) (node.x / node.width);
         int cellY = (int) (node.y / node.height);
         System.out.println("Cell of a parent: " + cellX + ", " + cellY);
-        for (int x = Math.abs(cellX - 1); x <= cellY + 1; ++x) {
-            for (int y = cellY - 1; y <= cellY + 1; ++y) {
-                if (x != cellX && y != cellY) {
+        for (int x = cellX - 1 < 0 ? 0 : cellX - 1; x <= cellX + 1; ++x) {
+            for (int y = cellY - 1 < 0 ? 0 : cellY - 1; y <= cellY + 1; ++y) {
+                if (x != cellX || y != cellY) {
                     node.addNeighbour(getNode(x, y));
                 }
             }
         }
     }
 
-    public void trace(Entity from, Entity to) {
+    private Path constructPath(Node goalNode) {
+        Path path = new Path();
+        Node node = goalNode;
+        while (node != null) {
+            path.addNodeFront(node);
+            node = node.getParent();
+        }
+        return path;
+    }
+
+    public Path trace(Entity from, Entity to) {
         nodes.clear();
 
         Node current;
@@ -70,6 +80,8 @@ public class Pathfinder {
         PriorityQueue<Node> queue = new PriorityQueue<Node>();
         queue.add(start);
 
+        Path bestPath = null;
+
         while (queue.size() > 0) {
             current = queue.poll();
 
@@ -81,6 +93,7 @@ public class Pathfinder {
 
             if (current.isIntersecting(goal)) {
                 System.out.println("Seems to be found!");
+                bestPath = constructPath(current);
                 break;
             }
 
@@ -95,11 +108,9 @@ public class Pathfinder {
                     continue;
                 }
 
-                //                System.out.println("  Neighbour: " + neighbour.getBounds().getX() + ", " + neighbour.getBounds().getY() + "; " + neighbour.getBounds().getWidth() + ", " + neighbour.getBounds().getHeight());
+                System.out.println("  Neighbour: " + neighbour.getBounds().getX() / cellWidth + ", " + neighbour.getBounds().getY() / cellHeight + "; " + neighbour.getBounds().getWidth() + ", " + neighbour.getBounds().getHeight());
 
                 float distance = current.getPathDistance() + current.getPosition().distance(neighbour.getPosition());
-
-                //                System.out.println(distance);
 
                 if (neighbour.getParent() != null && distance >= neighbour.getPathDistance()) {
                     continue;
@@ -113,6 +124,19 @@ public class Pathfinder {
                     queue.add(neighbour);
                 }
             }
+        }
+
+        return bestPath;
+    }
+
+    public void render(Camera camera, Graphics g) {
+        g.setColor(new Color(200, 200, 15, 50));
+        Iterator it = nodes.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry) it.next();
+            Node node = (Node) pairs.getValue();
+            g.drawLine(camera.getX(node.x), camera.getZ(node.y), camera.getX(node.x + node.width), camera.getZ(node.y));
+            g.drawLine(camera.getX(node.x), camera.getZ(node.y), camera.getX(node.x), camera.getZ(node.y + node.height));
         }
     }
 }

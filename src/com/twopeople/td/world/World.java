@@ -2,6 +2,7 @@ package com.twopeople.td.world;
 
 import com.twopeople.td.entity.Camp;
 import com.twopeople.td.entity.Entity;
+import com.twopeople.td.entity.interior.Wall;
 import com.twopeople.td.entity.mob.Mob;
 import com.twopeople.td.state.GameState;
 import org.newdawn.slick.Color;
@@ -21,7 +22,8 @@ public class World {
     private EntityVault entities;
 
     private ConstructionManager constructionManager;
-
+    private Pathfinder pathfinder = new Pathfinder(this);
+    private Path path;
 
     public World(GameState game) {
         this.gameState = game;
@@ -30,13 +32,14 @@ public class World {
         this.entities = new EntityVault(worldWidth, worldHeight);
         this.constructionManager = new ConstructionManager(this);
 
-        Mob mob = new Mob(this, 10, 370, 48, 48);
-        Camp camp = new Camp(this, 200, 200);
+        Mob mob = new Mob(this, 48 * 24, 48 * 2, 48, 48);
+        Wall wall = new Wall(this, 48 * 20, 48 * 3);
+        Camp camp = new Camp(this, 48 * 8, 48 * 8);
         entities.add(mob);
         entities.add(camp);
+        entities.add(wall);
 
-        Pathfinder pathfinder = new Pathfinder(this);
-        pathfinder.trace(mob, camp);
+        path = pathfinder.trace(mob, camp);
     }
 
     public void update(GameContainer gameContainer, int delta) {
@@ -65,8 +68,11 @@ public class World {
 
         g.setColor(new Color(204, 204, 204, 25));
         g.fillRect(camera.getX(0), camera.getZ(0), worldWidth, worldHeight);
+        path.render(camera, g);
         renderVault(gameContainer, camera, g, entities);
         constructionManager.render(gameContainer, camera, g);
+        pathfinder.render(camera, g);
+
         //renderGrid(camera, g, entities);
         g.setColor(Color.white);
         g.drawString("selected tower=" + getCM().getSelectedTower(), 10, 30);
