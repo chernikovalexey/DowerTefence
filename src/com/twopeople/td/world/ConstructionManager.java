@@ -1,8 +1,8 @@
 package com.twopeople.td.world;
 
-import com.twopeople.td.entity.tower.Factory;
 import com.twopeople.td.entity.tower.MachineGunTower;
 import com.twopeople.td.entity.tower.Tower;
+import com.twopeople.td.entity.tower.TowerFactory;
 import com.twopeople.td.gui.SquareUiControl;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -79,7 +79,7 @@ public class ConstructionManager {
 
         if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) && renderGrid) {
             Tower newTower = towers.get(selectedTower);
-            world.addEntity(Factory.create(newTower.getClass().getName(), world, getOverCell().getX(), getOverCell().getY()));
+            world.addEntity(TowerFactory.create(newTower.getClass().getName(), world, getOverCell().getX(), getOverCell().getY()));
         }
     }
 
