@@ -32,9 +32,9 @@ public class World {
         this.entities = new EntityVault(worldWidth, worldHeight);
         this.constructionManager = new ConstructionManager(this);
 
-        Mob mob = new Mob(this, 48 * 24, 48 * 2, 48, 48);
-        Wall wall = new Wall(this, 48 * 20, 48 * 3);
-        Camp camp = new Camp(this, 48 * 8, 48 * 8);
+        Mob mob = new Mob(this, 48 * 24, 48 * 2, 48, 48, 0);
+        Wall wall = new Wall(this, 48 * 20, 48 * 3, 0);
+        Camp camp = new Camp(this, 48 * 8, 48 * 8, 0);
         entities.add(mob);
         entities.add(camp);
         entities.add(wall);

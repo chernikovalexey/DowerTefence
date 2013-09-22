@@ -23,7 +23,7 @@ public class Tower extends Entity {
     private boolean selected = false;
 
     public Tower(World world, float x, float z, int price) {
-        super(world, x, 0, z, 48, 48);
+        super(world, x, 0, z, 48, 48, -1);
         this.price = price;
         this.id = ++globalId;
     }

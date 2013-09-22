@@ -8,7 +8,7 @@ import com.twopeople.td.world.World;
  */
 
 public class Unit extends Mob {
-    public Unit(World world, float x, float z) {
-        super(world, x, z, 0, 0);
+    public Unit(World world, float x, float z, int id) {
+        super(world, x, z, 0, 0, id);
     }
 }

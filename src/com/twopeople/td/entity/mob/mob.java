@@ -12,8 +12,8 @@ import org.newdawn.slick.Input;
  */
 
 public class Mob extends Entity {
-    public Mob(World world, float x, float z, float width, float height) {
-        super(world, x, 0, z, width, height);
+    public Mob(World world, float x, float z, float width, float height, int id) {
+        super(world, x, 0, z, width, height, id);
     }
 
     @Override

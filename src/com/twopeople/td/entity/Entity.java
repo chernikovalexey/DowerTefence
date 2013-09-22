@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class Entity {
     protected World world;
 
+    private int id;
     private float x, y, z;
     private float width, height;
     private int cellX, cellY;
@@ -29,12 +30,13 @@ public class Entity {
     private Vector2f direction = new Vector2f(0f, 0f);
     private Vector3f velocity = new Vector3f(0f, 0f, 0f);
 
-    public Entity(World world, float x, float y, float z, float width, float height) {
+    public Entity(World world, float x, float y, float z, float width, float height, int id) {
         this.world = world;
         this.x = x;
         this.z = z;
         this.width = width;
         this.height = height;
+        this.id = id;
     }
 
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
@@ -151,5 +153,13 @@ public class Entity {
 
     public void setDirectionY(float dy) {
         direction.y = dy;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

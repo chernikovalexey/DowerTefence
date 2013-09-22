@@ -205,7 +205,7 @@ public class EntityVault {
     }
 
     public boolean isCollidingShape(Shape shape) {
-        Entity entity = new Entity(null, shape.getX(), 0, shape.getY(), shape.getWidth(), shape.getHeight());
+        Entity entity = new Entity(null, shape.getX(), 0, shape.getY(), shape.getWidth(), shape.getHeight(), -1);
         return !nothingColliding(entity);
     }
 
