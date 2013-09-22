@@ -36,10 +36,9 @@ public class Loader {
         }
 
         eList = element.getElementsByTagName("areas");
-        for(int i=0; i < eList.getLength(); i++)
-        {
+        for (int i = 0; i < eList.getLength(); i++) {
             Element e = (Element) eList.item(i);
-            getArea(e,world);
+            getArea(e, world);
         }
     }
 
@@ -56,15 +55,13 @@ public class Loader {
             case WAVE_SPAWNER:
                 WaveSpawner ws = new WaveSpawner(world, x, y, id);
                 NodeList waveElements = e.getElementsByTagName("wave");
-                for(int i=0;i<waveElements.getLength();i++)
-                {
-                    Element wave = (Element)waveElements.item(i);
+                for (int i = 0; i < waveElements.getLength(); i++) {
+                    Element wave = (Element) waveElements.item(i);
                     int time = Integer.parseInt(wave.getAttribute("time"));
                     int pylon = Integer.parseInt(wave.getAttribute("pylon"));
                     Wave w = new Wave(time, pylon);
                     NodeList units = wave.getElementsByTagName("unit");
-                    for(int j=0;j<units.getLength();j++)
-                    {
+                    for (int j = 0; j < units.getLength(); j++) {
                         Element unit = (Element) units.item(j);
                         int uid = Integer.parseInt(unit.getAttribute("unitId"));
                         int count = Integer.parseInt(unit.getAttribute("count"));
@@ -76,19 +73,18 @@ public class Loader {
                 world.addSpawner(ws);
                 break;
             case WALL:
-                world.addEntity(new Wall(world, x,y,id));
+                world.addEntity(new Wall(world, x, y));
                 break;
         }
     }
 
-    private static void getArea(Element e, World world)
-    {
+    private static void getArea(Element e, World world) {
         int x = Integer.parseInt(e.getAttribute("x"));
         int y = Integer.parseInt(e.getAttribute("y"));
         int id = Integer.parseInt(e.getAttribute("id"));
         int width = Integer.parseInt(e.getAttribute("width"));
         int height = Integer.parseInt(e.getAttribute("height"));
         int wave = Integer.parseInt(e.getAttribute("after"));
-        world.addArea(new Area(world,x,y,width,height, wave,id));
+        world.addArea(new Area(world, x, y, width, height, wave, id));
     }
 }

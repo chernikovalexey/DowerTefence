@@ -43,9 +43,9 @@ public class World {
         this.constructionManager = new ConstructionManager(this);
 
         Mob mob = new Mob(this, 48 * 24, 48 * 2, 48, 48, 0);
-        Wall wall = new Wall(this, 48 * 20, 48 * 3, 0);
+        Wall wall = new Wall(this, 48 * 20, 48 * 3);
         MachineGunTower tower = new MachineGunTower(this, 48 * 18, 48 * 4);
-        Camp camp = new Camp(this, 48 * 8, 48 * 8, 0);
+        Camp camp = new Camp(this, 48 * 8, 48 * 8, 999);
         entities.add(mob);
         entities.add(wall);
         entities.add(tower);
@@ -60,7 +60,7 @@ public class World {
         mob.setGoal(camp);
 
         path = pathfinder.trace(mob, camp);
-        getState().getCamera().setTargetX(250);
+        getState().getCamera().setTargetX(299);
     }
 
     public void update(GameContainer gameContainer, int delta) {
@@ -124,9 +124,9 @@ public class World {
     }
 
     public void addEntity(Entity entity) {
-        if (entities.nothingColliding(entity)) {
-            entities.add(entity);
-        }
+        //if (entities.nothingColliding(entity)) {
+        entities.add(entity);
+        //}
     }
 
     public void addSpawner(WaveSpawner spawner) {

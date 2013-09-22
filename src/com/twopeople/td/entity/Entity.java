@@ -22,17 +22,22 @@ import java.util.ArrayList;
  */
 
 public class Entity {
+    private static int globalId = -1;
+
     protected World world;
 
     private boolean isToRemove = false;
     private boolean isImmortal = true;
 
     private int id;
+    private int owner;
     private int health, maxHealth;
     private float speed = 0f;
     private float x, y, z;
     private float width, height;
     private int cellX, cellY;
+
+    private IType intersectionType = IType.All;
 
     private Vector2f direction = new Vector2f(0f, 0f);
     private Vector3f velocity = new Vector3f(0f, 0f, 0f);
@@ -52,13 +57,28 @@ public class Entity {
         Tile, Interior, Mob, Tower, Bullet
     }
 
+    public enum IType {
+        All, None, NotOwner
+    }
+
     public Entity(World world, float x, float y, float z, float width, float height, int id) {
         this.world = world;
         this.x = x;
+        this.y = y;
         this.z = z;
         this.width = width;
         this.height = height;
-        this.id = id;
+        setId(id);
+    }
+
+    public Entity(World world, float x, float y, float z, float width, float height) {
+        this.world = world;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.width = width;
+        this.height = height;
+        this.id = ++globalId;
     }
 
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
@@ -111,11 +131,11 @@ public class Entity {
 
         ArrayList<Entity> entities;
         x += velocity.x;
-        if (vault.getCollidingEntities(this).size() > 0) {
+        if (vault.getCollidingEntities(this, intersectionType).size() > 0) {
             x -= velocity.x;
         }
         z += velocity.z;
-        if (vault.getCollidingEntities(this).size() > 0) {
+        if (vault.getCollidingEntities(this, intersectionType).size() > 0) {
             z -= velocity.z;
         }
 
@@ -178,7 +198,7 @@ public class Entity {
 
     public boolean isCollidingWith(Shape shape) {
         for (Shape shape1 : getBBSkeleton()) {
-            if (shape1.intersects(shape)) {
+            if (shape.intersects(shape1)) {
                 return true;
             }
         }
@@ -289,8 +309,10 @@ public class Entity {
         return id;
     }
 
+    // Very low-level
     public void setId(int id) {
         this.id = id;
+        globalId = id;
     }
 
     public int getHealth() {
@@ -316,6 +338,22 @@ public class Entity {
 
     public boolean IsImmortal() {
         return this.isImmortal;
+    }
+
+    public void setIntersectionType(IType type) {
+        this.intersectionType = type;
+    }
+
+    public int getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(int owner) {
+        this.owner = owner;
+    }
+
+    public boolean isOwnerOf(Entity entity) {
+        return entity.getOwner() == id;
     }
 
     public EntityType getType() {

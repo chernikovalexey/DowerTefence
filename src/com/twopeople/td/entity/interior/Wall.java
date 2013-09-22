@@ -13,8 +13,8 @@ import org.newdawn.slick.Graphics;
  */
 
 public class Wall extends Entity {
-    public Wall(World world, float x, float z, int id) {
-        super(world, x, 0, z, 32, 56, id);
+    public Wall(World world, float x, float z) {
+        super(world, x, 0, z, 32, 56);
     }
 
     @Override

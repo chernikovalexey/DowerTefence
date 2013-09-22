@@ -21,20 +21,13 @@ import java.util.Iterator;
  */
 
 public class Tower extends BattleEntity {
-    private static int globalId = -1;
-    private int id;
     private int price;
 
     private boolean selected = false;
 
     public Tower(World world, float x, float z, int price) {
-        super(world, x, 0, z, 48, 48, -1);
+        super(world, x, 0, z, 48, 48);
         this.price = price;
-        this.id = ++globalId;
-    }
-
-    public int getId() {
-        return this.id;
     }
 
     @Override
@@ -57,8 +50,6 @@ public class Tower extends BattleEntity {
         Entity e;
         ArrayList<Entity> entities = EntityVault.filterByType(vault.getVisible(world.getState().getCamera()), EntityType.Mob);
         Iterator<Entity> i = entities.iterator();
-
-        //        System.out.println("In range: " + entities.size());
 
         float distance;
         float minDistance = Float.MAX_VALUE;

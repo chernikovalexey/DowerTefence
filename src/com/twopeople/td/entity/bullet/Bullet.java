@@ -15,8 +15,15 @@ import org.newdawn.slick.Graphics;
 
 public class Bullet extends Entity {
     public Bullet(World world, float x, float z) {
-        super(world, x, 0, z, 8, 8, -1);
+        super(world, x, 0, z, 8, 8);
+
+        setIntersectionType(IType.NotOwner);
         setSpeed(2.5f);
+    }
+
+    @Override
+    public EntityType getType() {
+        return EntityType.Bullet;
     }
 
     @Override
@@ -26,8 +33,6 @@ public class Bullet extends Entity {
 
     @Override
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
-        System.out.println("Updating a bullet: " + getX() + ", " + getZ());
-        super.update(gameContainer, delta, vault);
         super.moveInertly(delta, vault);
     }
 

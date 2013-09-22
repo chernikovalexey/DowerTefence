@@ -27,7 +27,9 @@ public class Mob extends BattleEntity {
     private Path path;
 
     public Mob(World world, float x, float z, float width, float height, int id) {
-        super(world, x, 0, z, width, height, id);
+        super(world, x, 0, z, width, height);
+
+        setId(id);
 
         setAnimation(Art.mob);
         setSpeed(1f);
@@ -64,6 +66,11 @@ public class Mob extends BattleEntity {
     @Override
     public EntityType getType() {
         return EntityType.Mob;
+    }
+
+    @Override
+    public void onHit(Entity entity) {
+        System.out.println("Hit!");
     }
 
     public void setGoal(Entity goal) {

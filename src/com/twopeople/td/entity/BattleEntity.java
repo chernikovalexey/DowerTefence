@@ -11,9 +11,10 @@ import org.newdawn.slick.geom.Circle;
 
 public class BattleEntity extends Entity {
     private float range = 0f;
+    private long lastTime = System.currentTimeMillis();
 
-    public BattleEntity(World world, float x, float y, float z, float width, float height, int id) {
-        super(world, x, y, z, width, height, id);
+    public BattleEntity(World world, float x, float y, float z, float width, float height) {
+        super(world, x, y, z, width, height);
     }
 
     public void setRange(float range) {
@@ -25,11 +26,17 @@ public class BattleEntity extends Entity {
     }
 
     public void shoot(float tx, float tz) {
-        double angle = Math.atan2(getDirectionY(), getDirectionX());
-        Bullet bullet = new Bullet(world, getX(), getZ());
-        bullet.setDirectionX((float) Math.cos(angle));
-        bullet.setDirectionY((float) Math.sin(angle));
-        world.addEntity(bullet);
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastTime > 500) {
+            lastTime = currentTime;
+
+            double angle = Math.atan2(getDirectionY(), getDirectionX());
+            Bullet bullet = new Bullet(world, getX(), getZ());
+            bullet.setDirectionX((float) Math.cos(angle));
+            bullet.setDirectionY((float) Math.sin(angle));
+            bullet.setOwner(getId());
+            world.addEntity(bullet);
+        }
     }
 
     public void shootAt(Entity entity) {

@@ -174,7 +174,9 @@ public class EntityVault {
             for (int y = 0; y < yCells; ++y) {
                 EntityVaultCell cell = getCell(x, y);
                 for (EntityVaultItem i : cell.getEntities()) {
-                    entities.add(i.getEntity());
+                    if (!i.isDuplicate) {
+                        entities.add(i.getEntity());
+                    }
                 }
             }
         }
@@ -206,29 +208,40 @@ public class EntityVault {
         return entities;
     }
 
-    public ArrayList<Entity> getCollidingEntities(Entity entity) {
+    private boolean isIntersectionPredicate(Entity e1, Entity e2, Entity.IType it) {
+        return (it == Entity.IType.All)
+                || (it == Entity.IType.NotOwner && !e1.isOwnerOf(e2));
+    }
+
+    public ArrayList<Entity> getCollidingEntities(Entity entity, Entity.IType it) {
         Entity e;
         ArrayList<Entity> entities = new ArrayList<Entity>();
 
         for (EntityVaultItem item : getCellFor(entity).getEntities()) {
-
             if (item.hasDuplicates()) {
                 for (Integer duplicate : item.getDuplicates()) {
                     for (EntityVaultItem item2 : getCell(duplicate).getEntities()) {
                         e = item2.getEntity();
-                        if (e.isCollidingWith(entity) && !e.equals(entity)) {
+                        if (e.isCollidingWith(entity) && !e.equals(entity) && isIntersectionPredicate(e, entity, it)) {
                             entities.add(e);
+                            e.onHit(entity);
                         }
                     }
                 }
             }
             e = item.getEntity();
-            if (e.isCollidingWith(entity) && !e.equals(entity)) {
+            System.out.println(it + ", " + isIntersectionPredicate(e, entity, it));
+            if (e.isCollidingWith(entity) && !e.equals(entity) && isIntersectionPredicate(e, entity, it)) {
                 entities.add(e);
+                e.onHit(entity);
             }
         }
 
         return entities;
+    }
+
+    public ArrayList<Entity> getCollidingEntities(Entity entity) {
+        return this.getCollidingEntities(entity, Entity.IType.All);
     }
 
     public boolean isCollidingShape(Shape shape) {
