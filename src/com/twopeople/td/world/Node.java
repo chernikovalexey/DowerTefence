@@ -97,7 +97,7 @@ public class Node implements Comparable<Node> {
     }
 
     public Shape getBounds() {
-        return new Rectangle(x, y, width, height);
+        return new Rectangle(x + 1, y + 1, width - 2, height - 2);
     }
 
     public boolean isIntersecting(Node node) {

@@ -18,6 +18,8 @@ public class Pathfinder {
     private World world;
     private float cellWidth, cellHeight;
 
+    private Node goal;
+
     private HashMap<String, Node> nodes = new HashMap<String, Node>();
 
     public Pathfinder(World world) {
@@ -43,10 +45,9 @@ public class Pathfinder {
         int cellX = (int) (node.x / node.width);
         int cellY = (int) (node.y / node.height);
 
-        for (int x = cellX - 1 < 0 ? 0 : cellX - 1; x <= cellX + 1; ++x) {
-            for (int y = cellY - 1 < 0 ? 0 : cellY - 1; y <= cellY + 1; ++y) {
+        for (int x = cellX - 1 < 0 ? 0 : cellX - 1; x <= (cellX + 1 > world.getWidth() / cellWidth ? cellX : cellX + 1); ++x) {
+            for (int y = cellY - 1 < 0 ? 0 : cellY - 1; y <= (cellY + 1 > world.getHeight() / cellHeight ? cellY : cellY + 1); ++y) {
                 n = getNode(x, y);
-                System.out.println("Checking whether passable for " + x + ", " + y + ": " + isPassable(n));
                 if (x != cellX || y != cellY) {
                     node.addNeighbour(n);
                 }
@@ -78,7 +79,7 @@ public class Pathfinder {
         }
 
         Node start = createNode((int) (from.getX() / cellWidth), (int) (from.getZ() / cellHeight));
-        Node goal = createNode((int) (to.getX() / cellWidth), (int) (to.getZ() / cellHeight));
+        this.goal = createNode((int) (to.getX() / cellWidth), (int) (to.getZ() / cellHeight));
 
         PriorityQueue<Node> queue = new PriorityQueue<Node>();
         queue.add(start);
@@ -92,10 +93,7 @@ public class Pathfinder {
                 continue;
             }
 
-            //            System.out.println("Current: " + current.getBounds().getX() + ", " + current.getBounds().getY() + "; " + current.getBounds().getWidth() + ", " + current.getBounds().getHeight());
-
             if (current.isIntersecting(goal)) {
-                System.out.println("Seems to be found!");
                 bestPath = constructPath(current);
                 break;
             }
@@ -104,14 +102,10 @@ public class Pathfinder {
 
             current.visit();
 
-            //System.out.println("Neighbours: " + current.getNeighbours().size());
-
             for (Node neighbour : current.getNeighbours()) {
-                if (neighbour.isVisited()) {
+                if (neighbour.isVisited() || (!isPassable(neighbour) && !neighbour.isIntersecting(goal))) {
                     continue;
                 }
-
-                //System.out.println("  Neighbour: " + neighbour.getBounds().getX() / cellWidth + ", " + neighbour.getBounds().getY() / cellHeight + "; " + neighbour.getBounds().getWidth() + ", " + neighbour.getBounds().getHeight());
 
                 float distance = current.getPathDistance() + current.getPosition().distance(neighbour.getPosition());
 
@@ -129,7 +123,7 @@ public class Pathfinder {
             }
         }
 
-        return bestPath;
+        return bestPath == null ? new Path() : bestPath;
     }
 
     public void render(Camera camera, Graphics g) {

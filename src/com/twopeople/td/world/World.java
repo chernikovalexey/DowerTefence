@@ -46,6 +46,7 @@ public class World {
         entities.add(wall);
 
         path = pathfinder.trace(mob, camp);
+        getState().getCamera().setTargetX(200);
     }
 
     public void update(GameContainer gameContainer, int delta) {
@@ -77,7 +78,7 @@ public class World {
         path.render(camera, g);
         renderVault(gameContainer, camera, g, entities);
         constructionManager.render(gameContainer, camera, g);
-        pathfinder.render(camera, g);
+        //pathfinder.render(camera, g);
 
         //renderGrid(camera, g, entities);
         g.setColor(Color.white);
