@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 
 public class Wave {
-    private int time,pylon;
+    private int time, pylon;
     private ArrayList<WaveInfo> waveInfo = new ArrayList<WaveInfo>();
 
     public Wave(int time, int pylon) {
@@ -16,8 +16,7 @@ public class Wave {
         this.pylon = pylon;
     }
 
-    public void addUnit(WaveInfo wave)
-    {
+    public void addUnit(WaveInfo wave) {
         waveInfo.add(wave);
     }
 }

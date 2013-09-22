@@ -138,8 +138,7 @@ public class World {
         return constructionManager;
     }
 
-    public void addSpawner(WaveSpawner spawner)
-    {
+    public void addSpawner(WaveSpawner spawner) {
         spawners.add(spawner);
     }
 
