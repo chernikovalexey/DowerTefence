@@ -41,18 +41,20 @@ public class Wave {
     }
 
     public void next(World world, WaveSpawner parent) {
-        Unit u = Unit.fromType(world, parent.getX(), parent.getZ(), waveInfo.get(0).unitId);
-        if(world.getEntities().nothingColliding(u))
+        if (waveInfo.size() == 0)
         {
+            finished = true;
+            return;
+        }
+        Unit u = Unit.fromType(world, parent.getX(), parent.getZ(), waveInfo.get(0).unitId);
+        if (world.getEntities().nothingColliding(u)) {
             waveInfo.get(0).count--;
-            if(waveInfo.get(0).count==0)
-                waveInfo.remove(0);
+            if (waveInfo.get(0).count == 0) { waveInfo.remove(0); }
             world.addEntity(u);
             u.setGoal(world.getCamp(this.pylon));
         }
 
-        if(waveInfo.size()==0)
-            parent.waveFinished(this.id);
+        if (waveInfo.size() == 0) { parent.waveFinished(this.id); }
     }
 
     public int getTime() {
