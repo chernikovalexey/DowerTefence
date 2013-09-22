@@ -1,19 +1,15 @@
 package com.twopeople.td.world;
 
-import com.twopeople.td.Area;
 import com.twopeople.td.entity.Camp;
-import com.twopeople.td.entity.Entity;
 import com.twopeople.td.entity.WaveSpawner;
 import com.twopeople.td.entity.interior.Wall;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import sun.plugin.dom.core.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 
 /**

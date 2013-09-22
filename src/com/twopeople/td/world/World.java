@@ -1,6 +1,5 @@
 package com.twopeople.td.world;
 
-import com.twopeople.td.Area;
 import com.twopeople.td.entity.Camp;
 import com.twopeople.td.entity.Entity;
 import com.twopeople.td.entity.WaveSpawner;
