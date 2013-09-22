@@ -5,6 +5,7 @@ import com.twopeople.td.world.Camera;
 import com.twopeople.td.world.World;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -41,6 +42,21 @@ public class GameState extends BasicGameState {
         camera.update(delta);
         world.update(gameContainer, delta);
         towerIcons.update(gameContainer, delta);
+
+        Input input = gameContainer.getInput();
+
+        if (input.isKeyDown(Input.KEY_LEFT)) {
+            camera.setTargetX(camera.getTargetX() - 1f);
+        }
+        if (input.isKeyDown(Input.KEY_RIGHT)) {
+            camera.setTargetX(camera.getTargetX() + 1f);
+        }
+        if (input.isKeyDown(Input.KEY_UP)) {
+            camera.setTargetY(camera.getTargetY() - 1f);
+        }
+        if (input.isKeyDown(Input.KEY_DOWN)) {
+            camera.setTargetY(camera.getTargetY() + 1f);
+        }
     }
 
     @Override

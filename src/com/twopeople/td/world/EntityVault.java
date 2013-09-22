@@ -13,10 +13,10 @@ import java.util.Iterator;
  */
 
 public class EntityVault {
-    private float worldWidth, worldHeight;
+    private int size = 0;
     public int xCells, yCells;
 
-    public EntityVaultCell[] cells;
+    private EntityVaultCell[] cells;
 
     public class EntityVaultCell {
         public static final float WIDTH = 200;
@@ -76,6 +76,7 @@ public class EntityVault {
                         }
                     }
                     it.remove();
+                    return true;
                 }
             }
 
@@ -132,8 +133,6 @@ public class EntityVault {
     }
 
     public EntityVault(float worldWidth, float worldHeight) {
-        this.worldWidth = worldWidth;
-        this.worldHeight = worldHeight;
         this.xCells = (int) (worldWidth / EntityVaultCell.WIDTH);
         this.yCells = (int) (worldHeight / EntityVaultCell.HEIGHT);
         this.cells = new EntityVaultCell[xCells * yCells];
@@ -153,10 +152,14 @@ public class EntityVault {
         entity.setCellY(cy);
 
         getCell(cx, cy).add(entity);
+        ++size;
     }
 
     public boolean remove(Entity entity) {
-        return getCell(entity.getCellX(), entity.getCellY()).remove(entity);
+        if (getCell(entity.getCellX(), entity.getCellY()).remove(entity)) {
+            return --size == size;
+        }
+        return false;
     }
 
     public void move(Entity entity) {
@@ -164,15 +167,39 @@ public class EntityVault {
         add(entity);
     }
 
-    public ArrayList<Entity> getVisible() {
+    public ArrayList<Entity> getAll() {
         ArrayList<Entity> entities = new ArrayList<Entity>();
 
         for (int x = 0; x < xCells; ++x) {
             for (int y = 0; y < yCells; ++y) {
-                EntityVaultCell cell = cells[x + y * xCells];
+                EntityVaultCell cell = getCell(x, y);
                 for (EntityVaultItem i : cell.getEntities()) {
                     entities.add(i.getEntity());
                 }
+            }
+        }
+
+        return entities;
+    }
+
+    public ArrayList<Entity> getVisible(Camera camera) {
+        ArrayList<Entity> entities = new ArrayList<Entity>();
+
+        for (Entity e : getAll()) {
+            if (camera.isVisible(e)) {
+                entities.add(e);
+            }
+        }
+
+        return entities;
+    }
+
+    public ArrayList<Entity> getOnEachTickUpdatable() {
+        ArrayList<Entity> entities = new ArrayList<Entity>();
+
+        for (Entity e : getAll()) {
+            if (e.updatesOnEachTick()) {
+                entities.add(e);
             }
         }
 
@@ -262,12 +289,16 @@ public class EntityVault {
     }
 
     public int size() {
-        int size = 0;
-        for (int x = 0; x < xCells; ++x) {
-            for (int y = 0; y < yCells; ++y) {
-                size += getCell(x, y).getEntities().size();
+        return size;
+    }
+
+    public static ArrayList<Entity> filterByType(ArrayList<Entity> entities, Entity.EntityType type) {
+        Iterator<Entity> i = entities.iterator();
+        while (i.hasNext()) {
+            if (i.next().getType() != type) {
+                i.remove();
             }
         }
-        return size;
+        return entities;
     }
 }

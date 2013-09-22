@@ -1,10 +1,14 @@
 package com.twopeople.td.entity.mob;
 
+import com.twopeople.td.Art;
+import com.twopeople.td.entity.BattleEntity;
 import com.twopeople.td.entity.Entity;
+import com.twopeople.td.world.Camera;
 import com.twopeople.td.world.EntityVault;
 import com.twopeople.td.world.Path;
 import com.twopeople.td.world.World;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -14,9 +18,9 @@ import org.newdawn.slick.geom.Vector2f;
  * At 11:37 AM on 9/21/13
  */
 
-public class Mob extends Entity {
-    private float speed, damage;
-    private int health, reward, unitId;
+public class Mob extends BattleEntity {
+    private float damage;
+    private int reward, unitId;
     private boolean isShooting, isFlying;
 
     private Entity goal;
@@ -24,6 +28,9 @@ public class Mob extends Entity {
 
     public Mob(World world, float x, float z, float width, float height, int id) {
         super(world, x, 0, z, width, height, id);
+
+        setAnimation(Art.mob);
+        setSpeed(1f);
     }
 
     @Override
@@ -39,29 +46,29 @@ public class Mob extends Entity {
     }
 
     @Override
+    public void render(GameContainer gameContainer, Camera camera, Graphics g) {
+        super.render(gameContainer, camera, g);
+        g.drawString("" + getHealth(), camera.getX(getX()), camera.getZ(getZ()));
+    }
+
+    @Override
+    public boolean updatesOnEachTick() {
+        return true;
+    }
+
+    @Override
     public Shape getBounds() {
         return new Rectangle(getX() + 1, getZ() + 1, getWidth() - 2, getHeight() - 2);
+    }
+
+    @Override
+    public EntityType getType() {
+        return EntityType.Mob;
     }
 
     public void setGoal(Entity goal) {
         this.goal = goal;
         this.path = world.getPathfinder().trace(this, goal);
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
     }
 
     public boolean isShooting() {

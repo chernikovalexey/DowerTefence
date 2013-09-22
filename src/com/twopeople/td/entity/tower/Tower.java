@@ -1,8 +1,10 @@
 package com.twopeople.td.entity.tower;
 
+import com.twopeople.td.entity.BattleEntity;
 import com.twopeople.td.entity.Entity;
 import com.twopeople.td.gui.TowerIcons;
 import com.twopeople.td.world.Camera;
+import com.twopeople.td.world.EntityVault;
 import com.twopeople.td.world.World;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -10,12 +12,15 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * Created by Alexey
  * At 2:21 AM on 9/21/13
  */
 
-public class Tower extends Entity {
+public class Tower extends BattleEntity {
     private static int globalId = -1;
     private int id;
     private int price;
@@ -33,13 +38,47 @@ public class Tower extends Entity {
     }
 
     @Override
-    public Tower clone() throws CloneNotSupportedException {
-        return (Tower) super.clone();
+    public Shape getBounds() {
+        return new Rectangle(getX() + 1, getZ() + 1, getWidth() - 2, getHeight() - 2);
     }
 
     @Override
-    public Shape getBounds() {
-        return new Rectangle(getX() + 1, getZ() + 1, getWidth() - 2, getHeight() - 2);
+    public EntityType getType() {
+        return EntityType.Tower;
+    }
+
+    @Override
+    public boolean updatesOnEachTick() {
+        return true;
+    }
+
+    @Override
+    public void update(GameContainer gameContainer, int delta, EntityVault vault) {
+        Entity e;
+        ArrayList<Entity> entities = EntityVault.filterByType(vault.getVisible(world.getState().getCamera()), EntityType.Mob);
+        Iterator<Entity> i = entities.iterator();
+
+        //        System.out.println("In range: " + entities.size());
+
+        float distance;
+        float minDistance = Float.MAX_VALUE;
+        Entity target = null;
+
+        while (i.hasNext()) {
+            e = i.next();
+            if (isInRange(e)) {
+                distance = getDistanceTo(e);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    target = e;
+                }
+            }
+        }
+
+        if (target != null) {
+            updateDirectionToEntity(target);
+            shootAt(target);
+        }
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.twopeople.td.world;
 
+import com.twopeople.td.entity.Entity;
+
 /**
  * Created by Alexey
  * At 12:42 AM on 9/20/13
@@ -51,5 +53,12 @@ public class Camera {
 
     public float getScreenHeight() {
         return this.screenHeight;
+    }
+
+    public boolean isVisible(Entity entity) {
+        return entity.getX() >= getTargetX() - entity.getWidth() - 100
+                && entity.getZ() >= getTargetY() - entity.getHeight() - 100
+                && entity.getX() <= getTargetX() + getScreenWidth() + 100
+                && entity.getZ() <= getTargetY() + getScreenHeight() + 100;
     }
 }
