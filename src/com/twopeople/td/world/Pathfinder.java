@@ -39,13 +39,16 @@ public class Pathfinder {
     }
 
     public void addNeighbours(Node node) {
+        Node n;
         int cellX = (int) (node.x / node.width);
         int cellY = (int) (node.y / node.height);
-        System.out.println("Cell of a parent: " + cellX + ", " + cellY);
+
         for (int x = cellX - 1 < 0 ? 0 : cellX - 1; x <= cellX + 1; ++x) {
             for (int y = cellY - 1 < 0 ? 0 : cellY - 1; y <= cellY + 1; ++y) {
+                n = getNode(x, y);
+                System.out.println("Checking whether passable for " + x + ", " + y + ": " + isPassable(n));
                 if (x != cellX || y != cellY) {
-                    node.addNeighbour(getNode(x, y));
+                    node.addNeighbour(n);
                 }
             }
         }
@@ -101,14 +104,14 @@ public class Pathfinder {
 
             current.visit();
 
-            System.out.println("Neighbours: " + current.getNeighbours().size());
+            //System.out.println("Neighbours: " + current.getNeighbours().size());
 
             for (Node neighbour : current.getNeighbours()) {
                 if (neighbour.isVisited()) {
                     continue;
                 }
 
-                System.out.println("  Neighbour: " + neighbour.getBounds().getX() / cellWidth + ", " + neighbour.getBounds().getY() / cellHeight + "; " + neighbour.getBounds().getWidth() + ", " + neighbour.getBounds().getHeight());
+                //System.out.println("  Neighbour: " + neighbour.getBounds().getX() / cellWidth + ", " + neighbour.getBounds().getY() / cellHeight + "; " + neighbour.getBounds().getWidth() + ", " + neighbour.getBounds().getHeight());
 
                 float distance = current.getPathDistance() + current.getPosition().distance(neighbour.getPosition());
 
