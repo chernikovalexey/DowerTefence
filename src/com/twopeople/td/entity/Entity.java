@@ -223,8 +223,10 @@ public class Entity {
 
     public void hurt(int damage) {
         health -= damage;
-        if (health < 0) {
+        if (health <= 0) {
             health = 0;
+            remove();
+            die();
         }
     }
 
@@ -233,6 +235,9 @@ public class Entity {
         if (health > maxHealth) {
             health = maxHealth;
         }
+    }
+
+    public void die() {
     }
 
     protected void remove() {

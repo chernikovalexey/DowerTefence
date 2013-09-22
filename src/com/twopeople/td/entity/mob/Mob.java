@@ -31,7 +31,8 @@ public class Mob extends BattleEntity {
         super(world, x, 0, z, width, height);
 
         setId(id);
-        setHealth(1000);
+        setReward(200);
+        setHealth(20);
 
         setAnimation(Art.mob);
         setSpeed(1f);
@@ -69,6 +70,12 @@ public class Mob extends BattleEntity {
     @Override
     public EntityType getType() {
         return EntityType.Mob;
+    }
+
+    @Override
+    public void die() {
+        System.out.println("Mob died!");
+        world.getCM().addMoney(getReward());
     }
 
     @Override

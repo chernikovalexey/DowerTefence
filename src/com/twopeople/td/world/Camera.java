@@ -39,6 +39,14 @@ public class Camera {
         y += (targetY - y) * delta * .01;
     }
 
+    public void moveX(float dx) {
+        setTargetX(getTargetX() + dx);
+    }
+
+    public void moveY(float dy) {
+        setTargetY(getTargetY() + dy);
+    }
+
     public float getX(float x) {
         return x - this.x;
     }

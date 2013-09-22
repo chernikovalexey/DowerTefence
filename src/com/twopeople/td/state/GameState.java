@@ -3,6 +3,7 @@ package com.twopeople.td.state;
 import com.twopeople.td.gui.TowerIcons;
 import com.twopeople.td.world.Camera;
 import com.twopeople.td.world.World;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -44,18 +45,21 @@ public class GameState extends BasicGameState {
         towerIcons.update(gameContainer, delta);
 
         Input input = gameContainer.getInput();
-
-        if (input.isKeyDown(Input.KEY_LEFT)) {
-            camera.setTargetX(camera.getTargetX() - 1f);
-        }
-        if (input.isKeyDown(Input.KEY_RIGHT)) {
-            camera.setTargetX(camera.getTargetX() + 1f);
-        }
-        if (input.isKeyDown(Input.KEY_UP)) {
-            camera.setTargetY(camera.getTargetY() - 1f);
-        }
-        if (input.isKeyDown(Input.KEY_DOWN)) {
-            camera.setTargetY(camera.getTargetY() + 1f);
+        float mx = input.getMouseX();
+        float my = input.getMouseY();
+        if (gameContainer.hasFocus()) {
+            if (input.isKeyDown(Input.KEY_LEFT) || mx < 10) {
+                camera.moveX(-1f);
+            }
+            if (input.isKeyDown(Input.KEY_RIGHT) || mx > camera.getScreenWidth() - 10) {
+                camera.moveX(1f);
+            }
+            if (input.isKeyDown(Input.KEY_UP) || my < 10) {
+                camera.moveY(-1f);
+            }
+            if (input.isKeyDown(Input.KEY_DOWN) || my > camera.getScreenHeight() - 10) {
+                camera.moveY(1f);
+            }
         }
     }
 
@@ -63,5 +67,7 @@ public class GameState extends BasicGameState {
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         world.render(gameContainer, g);
         towerIcons.render(gameContainer, g);
+        g.setColor(Color.white);
+        g.drawString("money=" + world.getCM().getMoney(), gameContainer.getWidth() - 100, 10);
     }
 }

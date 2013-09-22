@@ -78,11 +78,10 @@ public class World {
         constructionManager.render(gameContainer, camera, g);
         //pathfinder.render(camera, g);
 
-        renderGrid(camera, g, entities);
+        //renderGrid(camera, g, entities);
         g.setColor(Color.white);
-        g.drawString("selected tower=" + getCM().getSelectedTower(), 10, 30);
-        g.drawString("camera pos=" + camera.getTargetX() + ", " + camera.getTargetY(), 10, 50);
-        g.drawString("entities=" + entities.size(), 10, 70);
+        g.drawString("Camera: " + camera.getTargetX() + ", " + camera.getTargetY(), 10, 30);
+        g.drawString("Entities: " + entities.size(), 10, 50);
     }
 
     private void updateVault(GameContainer gameContainer, int delta, EntityVault vault) {

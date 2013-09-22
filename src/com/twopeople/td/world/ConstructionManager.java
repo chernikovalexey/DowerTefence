@@ -129,4 +129,12 @@ public class ConstructionManager {
     public ArrayList<Tower> getTowers() {
         return towers;
     }
+
+    public int getMoney() {
+        return this.money;
+    }
+
+    public void addMoney(int money) {
+        this.money += money;
+    }
 }
