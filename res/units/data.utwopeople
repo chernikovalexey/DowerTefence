@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ArrayOfMob xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Mob>
+    <Speed>35</Speed>
+    <Health>22</Health>
+    <IsShooting>true</IsShooting>
+    <Demage>79</Demage>
+    <Reward>7</Reward>
+    <IsFlying>false</IsFlying>
+    <Id>1</Id>
+    <Name>unit1</Name>
+  </Mob>
+  <Mob>
+    <Speed>5</Speed>
+    <Health>5</Health>
+    <IsShooting>false</IsShooting>
+    <Demage>5</Demage>
+    <Reward>5</Reward>
+    <IsFlying>true</IsFlying>
+    <Id>2</Id>
+    <Name>unit2</Name>
+  </Mob>
+</ArrayOfMob>
