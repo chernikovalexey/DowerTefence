@@ -24,12 +24,8 @@ import java.io.IOException;
 public class Loader {
     static final int WAVE_SPAWNER = 2, WALL = 1, PYLON = 5, AREA = 4;
 
-    public static class WorldData {
 
-    }
-
-    public static WorldData fromFile(String path, World world) throws ParserConfigurationException, IOException, SAXException {
-        WorldData wd = new WorldData();
+    public static void fromFile(String path, World world) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
 
@@ -37,17 +33,21 @@ public class Loader {
 
         NodeList map = doc.getElementsByTagName("map");
         Element element = (Element) map.item(0);
-        Element entities = (Element) element.getElementsByTagName("entities").item(0);
-        NodeList eList = entities.getElementsByTagName("entities");
+        NodeList eList = element.getElementsByTagName("entities");
         for (int i = 0; i < eList.getLength(); i++) {
             Element e = (Element) eList.item(i);
             getEntity(e, world);
         }
 
-        return null;
+        eList = element.getElementsByTagName("areas");
+        for(int i=0; i < eList.getLength(); i++)
+        {
+            Element e = (Element) eList.item(i);
+            getArea(e,world);
+        }
     }
 
-    private static Entity getEntity(Element e, World world) {
+    private static void getEntity(Element e, World world) {
         int x = Integer.parseInt(e.getAttribute("x"));
         int y = Integer.parseInt(e.getAttribute("y"));
         int type = Integer.parseInt(e.getAttribute("type"));
@@ -55,18 +55,44 @@ public class Loader {
 
         switch (type) {
             case PYLON:
-                return new Camp(world, x, y, id);
+                world.addEntity(new Camp(world, x, y, id));
+                break;
             case WAVE_SPAWNER:
-                return new WaveSpawner(world, x, y, id);
+                WaveSpawner ws = new WaveSpawner(world, x, y, id);
+                NodeList waveElements = e.getElementsByTagName("wave");
+                for(int i=0;i<waveElements.getLength();i++)
+                {
+                    Element wave = (Element)waveElements.item(i);
+                    int time = Integer.parseInt(wave.getAttribute("time"));
+                    int pylon = Integer.parseInt(wave.getAttribute("pylon"));
+                    Wave w = new Wave(time, pylon);
+                    NodeList units = wave.getElementsByTagName("unit");
+                    for(int j=0;j<units.getLength();j++)
+                    {
+                        Element unit = (Element) units.item(j);
+                        int uid = Integer.parseInt(unit.getAttribute("unitId"));
+                        int count = Integer.parseInt(unit.getAttribute("count"));
+                        WaveInfo wi = new WaveInfo(uid, count);
+                        w.addUnit(wi);
+                    }
+                    ws.addWave(w);
+                }
+                world.addSpawner(ws);
+                break;
             case WALL:
-                return new Wall(world, x, y, id);
-            case AREA:
-                int width = Integer.parseInt(e.getAttribute("width"));
-                int height = Integer.parseInt(e.getAttribute("height"));
-                int wave = Integer.parseInt(e.getAttribute("after"));
-                return new Area(world,x,y,width,height, wave,id);
+                world.addEntity(new Wall(world, x,y,id));
+                break;
         }
+    }
 
-        return null;
+    private static void getArea(Element e, World world)
+    {
+        int x = Integer.parseInt(e.getAttribute("x"));
+        int y = Integer.parseInt(e.getAttribute("y"));
+        int id = Integer.parseInt(e.getAttribute("id"));
+        int width = Integer.parseInt(e.getAttribute("width"));
+        int height = Integer.parseInt(e.getAttribute("height"));
+        int wave = Integer.parseInt(e.getAttribute("after"));
+        world.addArea(new Area(world,x,y,width,height, wave,id));
     }
 }

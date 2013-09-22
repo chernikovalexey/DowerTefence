@@ -12,6 +12,8 @@ import org.newdawn.slick.Input;
  */
 
 public class Mob extends Entity {
+    private int speed,health, damage,reward,unitId;
+    private boolean isShooting, isFlying;
     public Mob(World world, float x, float z, float width, float height, int id) {
         super(world, x, 0, z, width, height, id);
     }
@@ -36,5 +38,61 @@ public class Mob extends Entity {
         }
 
         super.moveInertly(delta, vault);
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public boolean isShooting() {
+        return isShooting;
+    }
+
+    public void setShooting(boolean shooting) {
+        isShooting = shooting;
+    }
+
+    public boolean isFlying() {
+        return isFlying;
+    }
+
+    public void setFlying(boolean flying) {
+        isFlying = flying;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public int getReward() {
+        return reward;
+    }
+
+    public void setReward(int reward) {
+        this.reward = reward;
+    }
+
+    public int getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(int unitId) {
+        this.unitId = unitId;
     }
 }

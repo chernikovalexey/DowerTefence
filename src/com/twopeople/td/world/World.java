@@ -1,7 +1,9 @@
 package com.twopeople.td.world;
 
+import com.twopeople.td.Area;
 import com.twopeople.td.entity.Camp;
 import com.twopeople.td.entity.Entity;
+import com.twopeople.td.entity.WaveSpawner;
 import com.twopeople.td.entity.interior.Wall;
 import com.twopeople.td.entity.mob.Mob;
 import com.twopeople.td.state.GameState;
@@ -9,6 +11,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+
+import java.util.ArrayList;
 
 /**
  * Created by Alexey
@@ -20,6 +24,8 @@ public class World {
     private float worldWidth, worldHeight;
 
     private EntityVault entities;
+    private ArrayList<Area> areas = new ArrayList<Area>();
+    private ArrayList<WaveSpawner> spawners = new ArrayList<WaveSpawner>();
 
     private ConstructionManager constructionManager;
     private Pathfinder pathfinder = new Pathfinder(this);
@@ -129,5 +135,14 @@ public class World {
 
     public ConstructionManager getCM() {
         return constructionManager;
+    }
+
+    public void addSpawner(WaveSpawner spawner)
+    {
+        spawners.add(spawner);
+    }
+
+    public void addArea(Area area) {
+        areas.add(area);
     }
 }
