@@ -27,10 +27,9 @@ public class Mob extends BattleEntity {
     private Entity goal;
     private Path path;
 
-    public Mob(World world, float x, float z, float width, float height, int id) {
+    public Mob(World world, float x, float z, float width, float height) {
         super(world, x, 0, z, width, height);
 
-        setId(id);
         setReward(200);
         setHealth(20);
 

@@ -53,6 +53,10 @@ public class Entity {
             new Vector2f(135), new Vector2f(45)
     };
 
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
     public enum EntityType {
         Tile, Interior, Mob, Tower, Bullet
     }

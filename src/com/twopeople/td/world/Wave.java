@@ -1,5 +1,9 @@
 package com.twopeople.td.world;
 
+import com.twopeople.td.entity.Entity;
+import com.twopeople.td.entity.WaveSpawner;
+import com.twopeople.td.entity.mob.Unit;
+
 import java.util.ArrayList;
 
 /**
@@ -9,14 +13,49 @@ import java.util.ArrayList;
 
 public class Wave {
     private int time, pylon;
+    private boolean started;
     private ArrayList<WaveInfo> waveInfo = new ArrayList<WaveInfo>();
+    private boolean finished;
+    private int current, id;
 
-    public Wave(int time, int pylon) {
+    public Wave(int time, int pylon, int id) {
         this.time = time;
         this.pylon = pylon;
+        this.id = id;
     }
 
     public void addUnit(WaveInfo wave) {
         waveInfo.add(wave);
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public void setStarted(boolean started) {
+        this.started = started;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void next(World world, WaveSpawner parent) {
+        Unit u = Unit.fromType(world, parent.getX(), parent.getZ(), waveInfo.get(0).unitId);
+        if(world.getEntities().nothingColliding(u))
+        {
+            waveInfo.get(0).count--;
+            if(waveInfo.get(0).count==0)
+                waveInfo.remove(0);
+            world.addEntity(u);
+            u.setGoal(world.getCamp(this.pylon));
+        }
+
+        if(waveInfo.size()==0)
+            parent.waveFinished(this.id);
+    }
+
+    public int getTime() {
+        return time;
     }
 }

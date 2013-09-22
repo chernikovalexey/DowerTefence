@@ -12,6 +12,7 @@ import com.twopeople.td.state.GameState;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,16 +34,34 @@ public class World {
     private ConstructionManager constructionManager;
     private Pathfinder pathfinder = new Pathfinder(this);
     private Path path;
+    private AreaManager areaManager;
 
     public World(GameState game) {
         this.gameState = game;
-        this.worldWidth = 2048;
-        this.worldHeight = 2048;
+        try
+        {
+            Vector2f worldSizes = Loader.preLoad("res/maps/map.dttwopeople", this);
+            this.setWidth(worldSizes.getX());
+            this.setHeight(worldSizes.getY());
+            areas.clear();
+        }
+        catch (Exception e)
+        {
+
+        }
         this.tiles = new EntityVault(worldWidth, worldHeight);
         this.entities = new EntityVault(worldWidth, worldHeight);
         this.constructionManager = new ConstructionManager(this);
 
-        Mob mob = new Mob(this, 48 * 24, 48 * 2, 48, 48, 0);
+        try {
+            Loader.fromFile("res/maps/map.dttwopeople", this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        areaManager = new AreaManager(areas, spawners);
+
+        Mob mob = new Mob(this, 48 * 5, 48 * 2, 48, 48);
         Wall wall = new Wall(this, 48 * 20, 48 * 3);
         MachineGunTower tower = new MachineGunTower(this, 48 * 18, 48 * 4);
         Camp camp = new Camp(this, 48 * 8, 48 * 8, 999);
@@ -67,6 +86,7 @@ public class World {
         updateVault(gameContainer, delta, tiles);
         updateVault(gameContainer, delta, entities);
         constructionManager.update(gameContainer, delta);
+        areaManager.update();
     }
 
     public void render(GameContainer gameContainer, Graphics g) {
@@ -78,10 +98,24 @@ public class World {
         constructionManager.render(gameContainer, camera, g);
         //pathfinder.render(camera, g);
 
-        //renderGrid(camera, g, entities);
+        renderGrid(camera, g, entities);
+        renderFog(camera, g, entities);
+
         g.setColor(Color.white);
-        g.drawString("Camera: " + camera.getTargetX() + ", " + camera.getTargetY(), 10, 30);
-        g.drawString("Entities: " + entities.size(), 10, 50);
+        g.drawString("selected tower=" + getCM().getSelectedTower(), 10, 30);
+        g.drawString("camera pos=" + camera.getTargetX() + ", " + camera.getTargetY(), 10, 50);
+        g.drawString("entities=" + entities.size(), 10, 70);
+    }
+
+    private void renderFog(Camera camera, Graphics g, EntityVault entities) {
+        g.setColor(Color.black);
+        for(Area area: areas)
+        {
+            if(area.isOpened()) continue;
+            Entity e = new Entity(this, area.getX(), area.getY(), area.getY(), area.getWidth(), area.getHeight());
+            if(camera.isVisible(e))
+                g.fillRect(camera.getX(area.getX()), camera.getZ(area.getY()), area.getWidth(), area.getHeight());
+        }
     }
 
     private void updateVault(GameContainer gameContainer, int delta, EntityVault vault) {
@@ -91,7 +125,7 @@ public class World {
             e = i.next();
             e.update(gameContainer, delta, vault);
             if (e.shouldRemove()) {
-                vault.remove(e);
+                i.remove();
             }
         }
     }
@@ -158,5 +192,23 @@ public class World {
 
     public Pathfinder getPathfinder() {
         return pathfinder;
+    }
+
+    public void setWidth(float width) {
+        this.worldWidth = width;
+    }
+
+    public void setHeight(float height) {
+        this.worldHeight = height;
+    }
+
+    public Camp getCamp(int id) {
+        for(Entity e:this.getEntities().getAll())
+        {
+            if(e.getId()==id)
+                return (Camp)e;
+        }
+
+        return null;
     }
 }

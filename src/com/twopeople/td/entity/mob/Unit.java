@@ -1,5 +1,6 @@
 package com.twopeople.td.entity.mob;
 
+import com.twopeople.td.entity.Entity;
 import com.twopeople.td.world.World;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -14,12 +15,12 @@ import java.util.HashMap;
  * At 3:19 AM on 9/22/13
  */
 
-public class Unit extends Mob {
+public class Unit extends Mob implements Cloneable {
     static HashMap<Integer, Unit> units = new HashMap<Integer, Unit>();
     private String name;
 
-    public Unit(World world, float x, float z, int id) {
-        super(world, x, z, 0, 0, id);
+    public Unit(World world, float x, float z) {
+        super(world, x, z, 0, 0);
     }
 
     static {
@@ -42,12 +43,28 @@ public class Unit extends Mob {
         Element element = (Element) map.item(0);
         NodeList mobs = element.getElementsByTagName("Mob");
         for (int i = 0; i < mobs.getLength(); i++) {
-            Element e = (Element) mobs.item(i);
+            Element e;
+            try
+            {
+                e = (Element) mobs.item(i);
+            }
+            catch (Exception ex) {
+                continue;
+            }
             NodeList p = e.getChildNodes();
-            Unit u = new Unit(null, 0, 0, 0);
+            Unit u = new Unit(null, 0, 0);
             for (int j = 0; j < p.getLength(); j++) {
-                Element property = (Element) p.item(i);
+                Element property;
+                try
+                {
+                    property = (Element) p.item(j);
+                }
+                catch (Exception ex)
+                {
+                    continue;
+                }
                 String name = property.getTagName();
+                System.out.println(name);
                 if (name.equals("Speed")) {
                     u.setSpeed(Integer.parseInt(property.getTextContent()));
                 } else if (name.equals("Health")) {
@@ -74,4 +91,25 @@ public class Unit extends Mob {
     public void setName(String name) {
         this.name = name;
     }
+
+    public static Unit fromType(World world, float x, float z, int unitId) {
+        try {
+            Unit unit = (Unit)units.get(unitId).clone();
+            unit.setX(x);
+            unit.setZ(z);
+            unit.setWorld(world);
+
+            return unit;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    Unit clone(Unit u)
+    {
+        Unit n = new Unit(u.world, u.getX(), u.getZ());
+        return n;
+    }
+
 }
