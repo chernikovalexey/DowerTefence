@@ -10,7 +10,9 @@ import com.twopeople.td.world.World;
 
 public class Area extends Entity {
 
-    public Area(World world, float x, float y, float z, float width, float height, int id) {
-        super(world, x, y, z, width, height, id);
+    private int wave;
+    public Area(World world, float x, float y, float width, float height, int wave, int id) {
+        super(world, x, 0, y, width, height, id);
+        this.wave = wave;
     }
 }

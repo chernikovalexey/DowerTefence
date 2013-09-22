@@ -1,7 +1,10 @@
 package com.twopeople.td.world;
 
+import com.twopeople.td.Area;
 import com.twopeople.td.entity.Camp;
 import com.twopeople.td.entity.Entity;
+import com.twopeople.td.entity.WaveSpawner;
+import com.twopeople.td.entity.interior.Wall;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -53,12 +56,15 @@ public class Loader {
         switch (type) {
             case PYLON:
                 return new Camp(world, x, y, id);
-            /*case WAVE_SPAWNER:
+            case WAVE_SPAWNER:
                 return new WaveSpawner(world, x, y, id);
             case WALL:
                 return new Wall(world, x, y, id);
             case AREA:
-                return new Area(x,y,id,e);*/
+                int width = Integer.parseInt(e.getAttribute("width"));
+                int height = Integer.parseInt(e.getAttribute("height"));
+                int wave = Integer.parseInt(e.getAttribute("after"));
+                return new Area(world,x,y,width,height, wave,id);
         }
 
         return null;
