@@ -78,7 +78,7 @@ public class Entity {
         this.z = z;
         this.width = width;
         this.height = height;
-        this.id = entityId++;
+        this.id = entityId;
     }
 
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
@@ -335,7 +335,7 @@ public class Entity {
     // Very low-level
     public void setId(int id) {
         this.id = id;
-        entityId = id;
+        entityId = id + 1;
     }
 
     public int getHealth() {

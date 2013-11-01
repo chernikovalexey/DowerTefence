@@ -196,7 +196,8 @@ public class World {
     }
 
     public Camp getCamp(int id) {
-        for (Entity e : this.getEntities().getAll()) {
+        ArrayList<Entity> ent = this.getEntities().getAll();
+        for (Entity e : ent) {
             if (e.getId() == id) { return (Camp) e; }
         }
 
