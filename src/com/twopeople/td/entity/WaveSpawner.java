@@ -33,24 +33,17 @@ public class WaveSpawner extends Entity {
         activatedTime = System.currentTimeMillis();
     }
 
-    public void waveFinished(int wave)
-    {
+    public void waveFinished(int wave) {
         areaManager.finishWave(wave);
     }
 
-    public void update()
-    {
-        if(!activated) return;
+    public void update() {
+        if (!activated) { return; }
         long current = System.currentTimeMillis() - activatedTime;
-        for(Wave w:waves)
-        {
-
-            if(w.isStarted() && !w.isFinished())
-            {
+        for (Wave w : waves) {
+            if (w.isStarted() && !w.isFinished()) {
                 w.next(world, this);
-            }
-            else if(!w.isStarted() && current/1000>w.getTime())
-            {
+            } else if (!w.isStarted() && current / 1000 > w.getTime()) {
                 w.setStarted(true);
             }
         }

@@ -55,17 +55,22 @@ public class TowerIcons {
     }
 
     public void update(GameContainer gameContainer, int delta) {
+        Tower tower;
         Input input = gameContainer.getInput();
 
         if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
             for (TowerIcon icon : icons) {
                 if (icon.isOver(input.getMouseX(), input.getMouseY())) {
-                    icon.getTower().toggleSelection();
+                    tower = icon.getTower();
 
-                    if (icon.getTower().isSelected()) {
-                        world.getCM().selectTower(icon.getTower().getId());
-                    } else {
-                        world.getCM().deselectTower();
+                    if (world.getCM().canAfford(tower)) {
+                        tower.toggleSelection();
+
+                        if (tower.isSelected()) {
+                            world.getCM().selectTower(icon.getTower().getId());
+                        } else {
+                            world.getCM().deselectTower();
+                        }
                     }
 
                     break;

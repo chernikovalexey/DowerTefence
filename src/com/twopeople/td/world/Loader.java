@@ -27,25 +27,21 @@ public class Loader {
         Element element = load(path);
         NodeList eList = element.getElementsByTagName("entities").item(0).getChildNodes();
         for (int i = 0; i < eList.getLength(); i++) {
-            org.w3c.dom.Node e = (org.w3c.dom.Node)eList.item(i);
-            if(e.getNodeName().equals("entity"))
-            {
-                getEntity((Element)e,world);
+            org.w3c.dom.Node e = (org.w3c.dom.Node) eList.item(i);
+            if (e.getNodeName().equals("entity")) {
+                getEntity((Element) e, world);
             }
         }
 
         loadAreas(element, world);
     }
 
-    private static void loadAreas(Element root, World world)
-    {
+    private static void loadAreas(Element root, World world) {
         NodeList eList = root.getElementsByTagName("areas").item(0).getChildNodes();
-        for(int i=0; i < eList.getLength(); i++)
-        {
+        for (int i = 0; i < eList.getLength(); i++) {
             org.w3c.dom.Node e = (org.w3c.dom.Node) eList.item(i);
-            if(e.getNodeName().equals("entity"))
-            {
-                getArea((Element)e,world);
+            if (e.getNodeName().equals("entity")) {
+                getArea((Element) e, world);
             }
         }
     }
@@ -72,19 +68,16 @@ public class Loader {
                 break;
             case WAVE_SPAWNER:
                 int area = -1;
-                if(!e.getAttribute("area").isEmpty())
-                     area = Integer.parseInt(e.getAttribute("area"));
+                if (!e.getAttribute("area").isEmpty()) { area = Integer.parseInt(e.getAttribute("area")); }
                 WaveSpawner ws = new WaveSpawner(world, x, y, area, id);
                 NodeList waveElements = e.getElementsByTagName("wave");
-                for(int i=0;i<waveElements.getLength();i++)
-                {
-                    Element wave = (Element)waveElements.item(i);
+                for (int i = 0; i < waveElements.getLength(); i++) {
+                    Element wave = (Element) waveElements.item(i);
                     int time = Integer.parseInt(wave.getAttribute("time"));
                     int pylon = Integer.parseInt(wave.getAttribute("pylon"));
                     Wave w = new Wave(time, pylon, id);
                     NodeList units = wave.getElementsByTagName("unit");
-                    for(int j=0;j<units.getLength();j++)
-                    {
+                    for (int j = 0; j < units.getLength(); j++) {
                         Element unit = (Element) units.item(j);
                         int uid = Integer.parseInt(unit.getAttribute("unitId"));
                         int count = Integer.parseInt(unit.getAttribute("count"));
@@ -96,15 +89,13 @@ public class Loader {
                 world.addSpawner(ws);
                 break;
             case WALL:
-                world.addEntity(new Wall(world, x,y));
+                world.addEntity(new Wall(world, x, y));
                 break;
         }
     }
 
-    
 
-    private static void getArea(Element e, World world)
-    {
+    private static void getArea(Element e, World world) {
         int x = Integer.parseInt(e.getAttribute("x")) * 48;
         int y = Integer.parseInt(e.getAttribute("y")) * 48;
 
@@ -112,15 +103,14 @@ public class Loader {
         int width = Integer.parseInt(e.getAttribute("width")) * 48;
         int height = Integer.parseInt(e.getAttribute("height")) * 48;
 
-        world.setWidth(Math.max(x + width, (int)world.getWidth()));
-        world.setHeight(Math.max(y + height, (int)world.getHeight()));
+        world.setWidth(Math.max(x + width, (int) world.getWidth()));
+        world.setHeight(Math.max(y + height, (int) world.getHeight()));
 
         int wave = -1;
         System.out.println(e.getAttribute("after"));
-        if(!e.getAttribute("after").isEmpty())
-            wave = Integer.parseInt(e.getAttribute("after"));
+        if (!e.getAttribute("after").isEmpty()) { wave = Integer.parseInt(e.getAttribute("after")); }
 
-        world.addArea(new Area(world,x,y,width,height, wave,id));
+        world.addArea(new Area(world, x, y, width, height, wave, id));
     }
 
     public static Vector2f preLoad(String fileName, World world) throws ParserConfigurationException, IOException, SAXException {

@@ -16,6 +16,11 @@ import java.util.ArrayList;
 public class Path {
     private int index = 0;
     private ArrayList<Node> nodes = new ArrayList<Node>();
+    private boolean finished = false;
+
+    public Path(boolean finished) {
+        this.finished = finished;
+    }
 
     public void addNodeFront(Node node) {
         nodes.add(0, node);
@@ -42,8 +47,13 @@ public class Path {
     public void next() {
         ++index;
         if (index >= nodes.size()) {
-            previous();
+            index = nodes.size() - 1;
+            finished = true;
         }
+    }
+
+    public boolean isFinished() {
+        return this.finished;
     }
 
     public void render(Camera camera, Graphics g) {

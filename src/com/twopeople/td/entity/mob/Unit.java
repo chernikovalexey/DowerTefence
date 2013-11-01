@@ -1,6 +1,5 @@
 package com.twopeople.td.entity.mob;
 
-import com.twopeople.td.entity.Entity;
 import com.twopeople.td.world.World;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -44,23 +43,18 @@ public class Unit extends Mob implements Cloneable {
         NodeList mobs = element.getElementsByTagName("Mob");
         for (int i = 0; i < mobs.getLength(); i++) {
             Element e;
-            try
-            {
+            try {
                 e = (Element) mobs.item(i);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 continue;
             }
             NodeList p = e.getChildNodes();
             Unit u = new Unit(null, 0, 0);
             for (int j = 0; j < p.getLength(); j++) {
                 Element property;
-                try
-                {
+                try {
                     property = (Element) p.item(j);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     continue;
                 }
                 String name = property.getTagName();
@@ -94,7 +88,7 @@ public class Unit extends Mob implements Cloneable {
 
     public static Unit fromType(World world, float x, float z, int unitId) {
         try {
-            Unit unit = (Unit)units.get(unitId).clone();
+            Unit unit = (Unit) units.get(unitId).clone();
             unit.setX(x);
             unit.setZ(z);
             unit.setWorld(world);
@@ -106,10 +100,8 @@ public class Unit extends Mob implements Cloneable {
         }
     }
 
-    Unit clone(Unit u)
-    {
+    public Unit clone(Unit u) {
         Unit n = new Unit(u.world, u.getX(), u.getZ());
         return n;
     }
-
 }

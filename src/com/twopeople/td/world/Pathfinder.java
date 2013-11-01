@@ -58,7 +58,7 @@ public class Pathfinder {
     }
 
     private Path constructPath(Node goalNode) {
-        Path path = new Path();
+        Path path = new Path(false);
         Node node = goalNode;
         while (node != null) {
             path.addNodeFront(node);
@@ -73,6 +73,8 @@ public class Pathfinder {
         Node current;
         this.cellWidth = from.getWidth();
         this.cellHeight = from.getHeight();
+
+        System.out.println("New Pathfinder: " + cellWidth + ", " + cellHeight);
 
         for (int x = 0; x < world.getWidth() / cellWidth; ++x) {
             for (int y = 0; y < world.getHeight() / cellHeight; ++y) {
@@ -125,7 +127,7 @@ public class Pathfinder {
             }
         }
 
-        return bestPath == null ? new Path() : bestPath;
+        return bestPath == null ? new Path(true) : bestPath;
     }
 
     public void render(Camera camera, Graphics g) {

@@ -79,7 +79,12 @@ public class Tower extends BattleEntity {
     }
 
     public void renderIcon(GameContainer gameContainer, Graphics g, float sx, float sy) {
-        g.setColor(Color.lightGray);
+        if (!world.getCM().canAfford(this)) {
+            g.setColor(Color.lightGray);
+        } else {
+            g.setColor(Color.gray);
+        }
+
         g.fillRect(sx, sy, TowerIcons.TowerIcon.WIDTH, TowerIcons.TowerIcon.HEIGHT);
         if (selected) {
             g.setColor(Color.red);
@@ -87,8 +92,8 @@ public class Tower extends BattleEntity {
         }
     }
 
-    public boolean canAfford(int money) {
-        return money >= price;
+    public int getPrice() {
+        return this.price;
     }
 
     public void select() {

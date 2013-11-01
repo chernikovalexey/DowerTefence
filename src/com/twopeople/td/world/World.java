@@ -4,7 +4,6 @@ import com.twopeople.td.entity.Camp;
 import com.twopeople.td.entity.Entity;
 import com.twopeople.td.entity.WaveSpawner;
 import com.twopeople.td.entity.interior.Wall;
-import com.twopeople.td.entity.mob.Mob;
 import com.twopeople.td.entity.tile.Tile;
 import com.twopeople.td.entity.tile.TileList;
 import com.twopeople.td.entity.tower.MachineGunTower;
@@ -31,41 +30,38 @@ public class World {
     private ArrayList<Area> areas = new ArrayList<Area>();
     private ArrayList<WaveSpawner> spawners = new ArrayList<WaveSpawner>();
 
+    //    private Pathfinder pathfinder = new Pathfinder(this);
     private ConstructionManager constructionManager;
-    private Pathfinder pathfinder = new Pathfinder(this);
-    private Path path;
     private AreaManager areaManager;
 
     public World(GameState game) {
-        this.gameState = game;
-        try
-        {
-            Vector2f worldSizes = Loader.preLoad("res/maps/map.dttwopeople", this);
-            this.setWidth(worldSizes.getX());
-            this.setHeight(worldSizes.getY());
+        try {
+            Vector2f worldSize = Loader.preLoad("res/maps/map.dttwopeople", this);
+            this.setWidth(worldSize.getX());
+            this.setHeight(worldSize.getY());
             areas.clear();
-        }
-        catch (Exception e)
-        {
 
+
+        } catch (Exception e) {
         }
+
+        this.gameState = game;
         this.tiles = new EntityVault(worldWidth, worldHeight);
         this.entities = new EntityVault(worldWidth, worldHeight);
-        this.constructionManager = new ConstructionManager(this);
 
         try {
             Loader.fromFile("res/maps/map.dttwopeople", this);
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
-        areaManager = new AreaManager(areas, spawners);
+        this.constructionManager = new ConstructionManager(this);
+        this.areaManager = new AreaManager(areas, spawners);
 
-        Mob mob = new Mob(this, 48 * 5, 48 * 2, 48, 48);
+        //        Mob mob = new Mob(this, 48 * 5, 48 * 2, 48, 48);
         Wall wall = new Wall(this, 48 * 20, 48 * 3);
         MachineGunTower tower = new MachineGunTower(this, 48 * 18, 48 * 4);
         Camp camp = new Camp(this, 48 * 8, 48 * 8, 999);
-        entities.add(mob);
+        //        entities.add(mob);
         entities.add(wall);
         entities.add(tower);
         entities.add(camp);
@@ -76,9 +72,8 @@ public class World {
             }
         }
 
-        mob.setGoal(camp);
+        //        mob.setGoal(camp);
 
-        path = pathfinder.trace(mob, camp);
         getState().getCamera().setTargetX(299);
     }
 
@@ -93,12 +88,10 @@ public class World {
         Camera camera = gameState.getCamera();
 
         renderVault(gameContainer, camera, g, tiles);
-        //path.render(camera, g);
         renderVault(gameContainer, camera, g, entities);
         constructionManager.render(gameContainer, camera, g);
-        //pathfinder.render(camera, g);
 
-        renderGrid(camera, g, entities);
+        //renderGrid(camera, g, entities);
         renderFog(camera, g, entities);
 
         g.setColor(Color.white);
@@ -109,12 +102,12 @@ public class World {
 
     private void renderFog(Camera camera, Graphics g, EntityVault entities) {
         g.setColor(Color.black);
-        for(Area area: areas)
-        {
-            if(area.isOpened()) continue;
+        for (Area area : areas) {
+            if (area.isOpened()) { continue; }
             Entity e = new Entity(this, area.getX(), area.getY(), area.getY(), area.getWidth(), area.getHeight());
-            if(camera.isVisible(e))
+            if (camera.isVisible(e)) {
                 g.fillRect(camera.getX(area.getX()), camera.getZ(area.getY()), area.getWidth(), area.getHeight());
+            }
         }
     }
 
@@ -161,9 +154,9 @@ public class World {
     }
 
     public void addEntity(Entity entity) {
-        //if (entities.nothingColliding(entity)) {
-        entities.add(entity);
-        //}
+        if (entities.nothingColliding(entity)) {
+            entities.add(entity);
+        }
     }
 
     public void addSpawner(WaveSpawner spawner) {
@@ -186,12 +179,12 @@ public class World {
         return gameState;
     }
 
+    //    public Pathfinder getPathfinder() {
+    //        return this.pathfinder;
+    //    }
+
     public ConstructionManager getCM() {
         return constructionManager;
-    }
-
-    public Pathfinder getPathfinder() {
-        return pathfinder;
     }
 
     public void setWidth(float width) {
@@ -203,10 +196,8 @@ public class World {
     }
 
     public Camp getCamp(int id) {
-        for(Entity e:this.getEntities().getAll())
-        {
-            if(e.getId()==id)
-                return (Camp)e;
+        for (Entity e : this.getEntities().getAll()) {
+            if (e.getId() == id) { return (Camp) e; }
         }
 
         return null;

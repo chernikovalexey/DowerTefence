@@ -6,6 +6,7 @@ import com.twopeople.td.entity.Entity;
 import com.twopeople.td.world.Camera;
 import com.twopeople.td.world.EntityVault;
 import com.twopeople.td.world.Path;
+import com.twopeople.td.world.Pathfinder;
 import com.twopeople.td.world.World;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -24,6 +25,7 @@ public class Mob extends BattleEntity {
     private int reward, unitId;
     private boolean isShooting, isFlying;
 
+    private Pathfinder pathfinder;
     private Entity goal;
     private Path path;
 
@@ -35,13 +37,15 @@ public class Mob extends BattleEntity {
 
         setAnimation(Art.mob);
         setSpeed(1f);
+
+        this.pathfinder = new Pathfinder(world);
     }
 
     @Override
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
         super.update(gameContainer, delta, vault);
 
-        if (goal != null) {
+        if (goal != null && !path.isFinished()) {
             Vector2f goalPosition = path.getCurrentGoalPosition(this);
             move(goalPosition.x - getWidth() / 2, goalPosition.y - getHeight() / 2);
         }
@@ -73,18 +77,12 @@ public class Mob extends BattleEntity {
 
     @Override
     public void die() {
-        System.out.println("Mob died!");
         world.getCM().addMoney(getReward());
-    }
-
-    @Override
-    public void onHit(Entity entity) {
-        //System.out.println("Hit!");
     }
 
     public void setGoal(Entity goal) {
         this.goal = goal;
-        this.path = world.getPathfinder().trace(this, goal);
+        this.path = pathfinder.trace(this, goal);
     }
 
     public boolean isShooting() {

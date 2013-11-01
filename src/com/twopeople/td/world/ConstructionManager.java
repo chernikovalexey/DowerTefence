@@ -20,13 +20,13 @@ public class ConstructionManager {
     private World world;
     private int xCells, yCells;
 
-    private int money = 0;
+    private int money = 10000;
     private ArrayList<Tower> towers = new ArrayList<Tower>();
     private int selectedTower = -1;
 
     private boolean renderGrid = false;
     private int overCellIndex = 0;
-    protected static int cellAmount = -1;
+    protected static int cellAmount = 0;
 
     private class ConstructionCell extends SquareUiControl {
         public static final int WIDTH = 48;
@@ -36,7 +36,7 @@ public class ConstructionManager {
 
         public ConstructionCell(float x, float y) {
             super(x, y, WIDTH, HEIGHT);
-            this.id = ++cellAmount;
+            this.id = cellAmount++;
         }
 
         public void render(Camera camera, Graphics g) {
@@ -78,8 +78,10 @@ public class ConstructionManager {
         }
 
         if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON) && renderGrid) {
-            Tower newTower = towers.get(selectedTower);
-            world.addEntity(TowerFactory.create(newTower.getClass().getName(), world, getOverCell().getX(), getOverCell().getY()));
+            Tower newTower = TowerFactory.create(towers.get(selectedTower).getClass().getName(), world, getOverCell().getX(), getOverCell().getY());
+            if (buy(newTower)) {
+                world.addEntity(newTower);
+            }
         }
     }
 
@@ -136,5 +138,21 @@ public class ConstructionManager {
 
     public void addMoney(int money) {
         this.money += money;
+    }
+
+    public boolean buy(Tower tower) {
+        if (canAfford(tower)) {
+            money -= tower.getPrice();
+            if (money == 0) {
+                tower.deselect();
+                deselectTower();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean canAfford(Tower tower) {
+        return money >= tower.getPrice();
     }
 }

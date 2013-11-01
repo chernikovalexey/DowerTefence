@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 
 public class Entity {
-    private static int globalId = -1;
+    private static int entityId = 0;
 
     protected World world;
 
@@ -53,10 +53,6 @@ public class Entity {
             new Vector2f(135), new Vector2f(45)
     };
 
-    public void setWorld(World world) {
-        this.world = world;
-    }
-
     public enum EntityType {
         Tile, Interior, Mob, Tower, Bullet
     }
@@ -82,7 +78,7 @@ public class Entity {
         this.z = z;
         this.width = width;
         this.height = height;
-        this.id = ++globalId;
+        this.id = entityId++;
     }
 
     public void update(GameContainer gameContainer, int delta, EntityVault vault) {
@@ -252,6 +248,14 @@ public class Entity {
         return this.isToRemove;
     }
 
+    public World getWorld() {
+        return this.world;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
     public float getX() {
         return this.x;
     }
@@ -331,7 +335,7 @@ public class Entity {
     // Very low-level
     public void setId(int id) {
         this.id = id;
-        globalId = id;
+        entityId = id;
     }
 
     public int getHealth() {

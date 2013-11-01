@@ -1,6 +1,6 @@
 package com.twopeople.td.world;
 
-import com.twopeople.td.entity.Entity;
+import com.twopeople.td.entity.Camp;
 import com.twopeople.td.entity.WaveSpawner;
 import com.twopeople.td.entity.mob.Unit;
 
@@ -41,8 +41,7 @@ public class Wave {
     }
 
     public void next(World world, WaveSpawner parent) {
-        if (waveInfo.size() == 0)
-        {
+        if (waveInfo.size() == 0) {
             finished = true;
             return;
         }
@@ -51,7 +50,13 @@ public class Wave {
             waveInfo.get(0).count--;
             if (waveInfo.get(0).count == 0) { waveInfo.remove(0); }
             world.addEntity(u);
-            u.setGoal(world.getCamp(this.pylon));
+
+            System.out.println("Has world? " + u.getWorld());
+            Camp camp = world.getCamp(this.pylon);
+            if (camp != null) {
+                System.out.println("One more unit has a goal!");
+                u.setGoal(world.getCamp(this.pylon));
+            }
         }
 
         if (waveInfo.size() == 0) { parent.waveFinished(this.id); }

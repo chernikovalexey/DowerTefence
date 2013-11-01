@@ -1,10 +1,10 @@
 package com.twopeople.td.entity.bullet;
 
+import com.twopeople.td.Art;
 import com.twopeople.td.entity.Entity;
 import com.twopeople.td.world.Camera;
 import com.twopeople.td.world.EntityVault;
 import com.twopeople.td.world.World;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
@@ -52,7 +52,6 @@ public class Bullet extends Entity {
 
     @Override
     public void render(GameContainer gameContainer, Camera camera, Graphics g) {
-        g.setColor(Color.black);
-        g.fillOval(camera.getX(getX()), camera.getZ(getZ()), getWidth(), getHeight());
+        g.drawImage(Art.bullets.getSprite(0, 0), camera.getX(getX()), camera.getZ(getZ()));
     }
 }

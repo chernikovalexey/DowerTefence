@@ -13,7 +13,7 @@ import org.newdawn.slick.Graphics;
 
 public class Camp extends Entity {
     public Camp(World world, int x, int z, int id) {
-        super(world,x,0,z,48,48,id);
+        super(world, x, 0, z, 48, 48, id);
     }
 
     @Override

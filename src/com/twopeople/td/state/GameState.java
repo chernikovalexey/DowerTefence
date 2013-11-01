@@ -45,8 +45,8 @@ public class GameState extends BasicGameState {
         towerIcons.update(gameContainer, delta);
 
         Input input = gameContainer.getInput();
-        float mx = input.getMouseX();
-        float my = input.getMouseY();
+        float mx = 200;//input.getMouseX();
+        float my = 200;//input.getMouseY();
         if (gameContainer.hasFocus()) {
             if (input.isKeyDown(Input.KEY_LEFT) || mx < 10) {
                 camera.moveX(-1f);
