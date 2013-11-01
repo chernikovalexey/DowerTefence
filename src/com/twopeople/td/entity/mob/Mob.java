@@ -80,6 +80,13 @@ public class Mob extends BattleEntity {
         world.getCM().addMoney(getReward());
     }
 
+    @Override
+    public void setWorld(World w)
+    {
+        this.world = w;
+        this.pathfinder = new Pathfinder(w);
+    }
+
     public void setGoal(Entity goal) {
         this.goal = goal;
         this.path = pathfinder.trace(this, goal);
