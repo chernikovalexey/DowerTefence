@@ -9,6 +9,8 @@
     <IsFlying>false</IsFlying>
     <Id>1</Id>
     <Name>unit1</Name>
+    <Width>40</Width>
+    <Height>40</Height>
   </Mob>
   <Mob>
     <Speed>5</Speed>
@@ -19,5 +21,7 @@
     <IsFlying>true</IsFlying>
     <Id>2</Id>
     <Name>unit2</Name>
+    <Width>40</Width>
+    <Height>40</Height>
   </Mob>
 </ArrayOfMob>

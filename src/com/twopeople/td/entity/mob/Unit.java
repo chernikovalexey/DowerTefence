@@ -75,6 +75,10 @@ public class Unit extends Mob implements Cloneable {
                     u.setId(Integer.parseInt(property.getTextContent()));
                 } else if (name.equals("Name")) {
                     u.setName(property.getTextContent());
+                } else if(name.equals("Width")) {
+                    u.setWidth(Integer.parseInt(property.getTextContent()));
+                } else if(name.equals("Height")) {
+                    u.setHeight(Integer.parseInt(property.getTextContent()));
                 }
             }
 
@@ -102,6 +106,8 @@ public class Unit extends Mob implements Cloneable {
 
     public Unit clone(Unit u) {
         Unit n = new Unit(u.world, u.getX(), u.getZ());
+        n.setWidth(u.getWidth());
+        n.setHeight(u.getHeight());
         return n;
     }
 }
