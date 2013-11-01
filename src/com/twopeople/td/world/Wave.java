@@ -51,10 +51,8 @@ public class Wave {
             if (waveInfo.get(0).count == 0) { waveInfo.remove(0); }
             world.addEntity(u);
 
-            System.out.println("Has world? " + u.getWorld());
             Camp camp = world.getCamp(this.pylon);
             if (camp != null) {
-                System.out.println("One more unit has a goal!");
                 u.setGoal(world.getCamp(this.pylon));
             }
         }

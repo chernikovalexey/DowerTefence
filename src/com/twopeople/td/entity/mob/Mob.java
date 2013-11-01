@@ -81,14 +81,14 @@ public class Mob extends BattleEntity {
     }
 
     @Override
-    public void setWorld(World w)
-    {
+    public void setWorld(World w) {
         this.world = w;
         this.pathfinder = new Pathfinder(w);
     }
 
     public void setGoal(Entity goal) {
         this.goal = goal;
+        System.out.println("Mob: " + this.getWidth() + ", " + this.getHeight());
         this.path = pathfinder.trace(this, goal);
     }
 
