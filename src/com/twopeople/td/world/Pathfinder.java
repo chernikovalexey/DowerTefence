@@ -69,18 +69,18 @@ public class Pathfinder {
 
     public Path trace(Entity from, Entity to) {
         nodes.clear();
-        System.out.println("nodes on start=" + nodes.size());
         Node current;
+
         this.cellWidth = from.getWidth();
         this.cellHeight = from.getHeight();
-
-        System.out.println("Nodes must be = " + world.getWidth() + "," + cellWidth + "," + world.getHeight() + "," + cellHeight);
 
         for (int x = 0; x < world.getWidth() / cellWidth; ++x) {
             for (int y = 0; y < world.getHeight() / cellHeight; ++y) {
                 createNode(x, y);
             }
         }
+
+        System.out.println("Starting tracing with " + nodes.size() + " nodes.");
 
         Node start = createNode((int) (from.getX() / cellWidth), (int) (from.getZ() / cellHeight));
         this.goal = createNode((int) (to.getX() / cellWidth), (int) (to.getZ() / cellHeight));

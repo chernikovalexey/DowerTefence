@@ -88,7 +88,6 @@ public class Mob extends BattleEntity {
 
     public void setGoal(Entity goal) {
         this.goal = goal;
-        System.out.println("Mob: " + this.getWidth() + ", " + this.getHeight());
         this.path = pathfinder.trace(this, goal);
     }
 

@@ -58,7 +58,7 @@ public class Unit extends Mob implements Cloneable {
                     continue;
                 }
                 String name = property.getTagName();
-                System.out.println(name);
+
                 if (name.equals("Speed")) {
                     u.setSpeed(Integer.parseInt(property.getTextContent()));
                 } else if (name.equals("Health")) {
@@ -75,9 +75,9 @@ public class Unit extends Mob implements Cloneable {
                     u.setId(Integer.parseInt(property.getTextContent()));
                 } else if (name.equals("Name")) {
                     u.setName(property.getTextContent());
-                } else if(name.equals("Width")) {
+                } else if (name.equals("Width")) {
                     u.setWidth(Integer.parseInt(property.getTextContent()));
-                } else if(name.equals("Height")) {
+                } else if (name.equals("Height")) {
                     u.setHeight(Integer.parseInt(property.getTextContent()));
                 }
             }
